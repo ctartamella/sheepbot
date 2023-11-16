@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot", "Sheep.Bot\SheepBot.csproj", "{85F9E35D-50C9-421C-A5F9-E0B29D1378FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot", "SheepBot\SheepBot.csproj", "{85F9E35D-50C9-421C-A5F9-E0B29D1378FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Models", "SheepBot.Models\SheepBot.Models.csproj", "{67649472-07C3-4931-90EA-8C0AC22A95F2}"
 EndProject
