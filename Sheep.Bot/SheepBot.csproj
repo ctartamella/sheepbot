@@ -6,6 +6,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <Version>0.1.0</Version>
+        <Title>SheepBot</Title>
+        <Authors>Chris Tartamella and Christian Bishop</Authors>
+        <RepositoryUrl>https://github.com/ctartamella/sheepbot</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>

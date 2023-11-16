@@ -1,16 +1,24 @@
 ﻿FROM mcr.microsoft.com/dotnet/runtime:7.0 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS restore
 WORKDIR /src
-COPY ["Sheep.Bot/SheepBot.csproj", "Sheep.Bot/"]
+COPY SheepBot.sln ./
+COPY SheepBot/SheepBot.csproj ./SheepBot/
+COPY SheepBot.Models/SheepBot.Models.csproj ./SheepBot.Models/
+COPY SheepBot.Repositories/SheepBot.Repositories.csproj ./SheepBot.Repositories/
+COPY SheepBot.Services/SheepBot.Services.csproj ./SheepBot.Services/
+
 RUN dotnet restore "Sheep.Bot/SheepBot.csproj"
+
+FROM restore as build
 COPY . .
-WORKDIR "/src/Sheep.Bot"
-RUN dotnet build "SheepBot.csproj" -c Release -o /app/build
+
+WORKDIR /src/SheepBot
+RUN dotnet build SheepBot.csproj -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "SheepBot.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish SheepBot.csproj -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
