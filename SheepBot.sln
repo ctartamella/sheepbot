@@ -1,12 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot", "SheepBot\SheepBot.csproj", "{85F9E35D-50C9-421C-A5F9-E0B29D1378FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot", "bot\SheepBot\SheepBot.csproj", "{85F9E35D-50C9-421C-A5F9-E0B29D1378FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Models", "SheepBot.Models\SheepBot.Models.csproj", "{67649472-07C3-4931-90EA-8C0AC22A95F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Models", "bot\SheepBot.Models\SheepBot.Models.csproj", "{67649472-07C3-4931-90EA-8C0AC22A95F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Repositories", "SheepBot.Repositories\SheepBot.Repositories.csproj", "{335CE5DC-18D0-49B8-A76D-5BB3FD344728}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Repositories", "bot\SheepBot.Repositories\SheepBot.Repositories.csproj", "{335CE5DC-18D0-49B8-A76D-5BB3FD344728}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Services", "SheepBot.Services\SheepBot.Services.csproj", "{E0F94958-1830-4074-9C1F-50764DF52F81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Services", "bot\SheepBot.Services\SheepBot.Services.csproj", "{E0F94958-1830-4074-9C1F-50764DF52F81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Repositories.Tests", "bot\SheepBot.Repositories.Tests\SheepBot.Repositories.Tests.csproj", "{3C5FF6BC-81A9-48E6-8483-DDE37CC1CFE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +32,9 @@ Global
 		{E0F94958-1830-4074-9C1F-50764DF52F81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0F94958-1830-4074-9C1F-50764DF52F81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0F94958-1830-4074-9C1F-50764DF52F81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C5FF6BC-81A9-48E6-8483-DDE37CC1CFE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C5FF6BC-81A9-48E6-8483-DDE37CC1CFE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C5FF6BC-81A9-48E6-8483-DDE37CC1CFE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C5FF6BC-81A9-48E6-8483-DDE37CC1CFE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

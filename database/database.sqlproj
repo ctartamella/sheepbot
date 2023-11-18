@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build">
+  <Sdk Name="Microsoft.Build.Sql" Version="0.1.12-preview" />
+  <PropertyGroup>
+    <Name>database</Name>
+    <ProjectGuid>{9E6605A3-D033-4FB0-8A0E-98DABA9EDED9}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    <ModelCollation>1033, CI</ModelCollation>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="dbo\Scripts\populate_race_length_type.PostDeployment.sql" />
+    <None Include="dbo\Scripts\populate_series_type.PostDeployment.sql" />
+    <PostDeploy Include="dbo\Scripts\PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="dbo\Scripts" />
+  </ItemGroup>
+  <Target Name="BeforeBuild">
+    <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />
+  </Target>
+</Project>
