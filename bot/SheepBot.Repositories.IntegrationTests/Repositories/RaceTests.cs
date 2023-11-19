@@ -69,7 +69,7 @@ public class RaceTests : ModelTestBase<Race>
         entity.TrackId = newTrackId;
         entity.Unit = entity.Unit is null
             ? null
-            : (RaceLengthUnit)(((int)entity.Unit + 1) % Enum.GetValues<RaceLengthUnit>().Length);
+            : (RaceLengthUnit)(((int)entity.Unit + 1) % Enum.GetValues<RaceLengthUnit>().Length + 1);
 
         return entity;
     }
