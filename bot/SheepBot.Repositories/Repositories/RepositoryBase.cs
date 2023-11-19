@@ -18,7 +18,14 @@ public abstract class RepositoryBase<TModel> : IRepositoryBase<TModel>
     public abstract Task<TModel?> FindAsync(int id);
     public abstract Task<int> InsertAsync(TModel entity);
     public abstract Task<int> InsertRangeAsync(IEnumerable<TModel> entities);
-    public abstract Task<bool> UpdateAsync(TModel entity);
+    public abstract Task<int> UpdateAsync(TModel entity);
     public abstract Task<int> DeleteAsync(int id);
+    
+    public virtual async Task<IEnumerable<TModel>> FindAsync(Predicate<TModel> predicate)
+    {
+        var results = await GetAllAsync().ConfigureAwait(false);
+        return results.Where(e => predicate(e));
+    }
+    
     public virtual Task<int> DeleteAsync(TModel entity) => DeleteAsync(entity.Id);
 }

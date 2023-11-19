@@ -1,63 +1,47 @@
 using System.Data;
+using Dapper;
 using Dapper.Transaction;
 using Microsoft.Data.SqlClient;
 using SheepBot.Models;
+using SheepBot.Repositories.Helpers;
 using SheepBot.Repositories.Interfaces;
 
 namespace SheepBot.Repositories;
 
 public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRepository
 {
-    public CarCarClassRepository(SqlTransaction transaction) : base(transaction)
-    {
-        
-    }
+    public CarCarClassRepository(SqlTransaction transaction) : base(transaction) { }
     
     public override async Task<IEnumerable<CarCarClass>> GetAllAsync()
     {
-        const string query = """
-                             SELECT id, car_id, class_id
-                             FROM [dbo].[class_car] WITH (NOLOCK)
-                             """;
-        return await Transaction.QueryAsync<CarCarClass>(query).ConfigureAwait(false);
+        return await Transaction.QueryAsync<CarCarClass>(GetAllQuery).ConfigureAwait(false);
     }
-
+    
     public override async Task<CarCarClass?> FindAsync(int id)
     {
-        const string query = """
-                             SELECT id, car_id, class_id
-                             FROM [dbo].[class_car] WITH (NOLOCK)
-                             WHERE id=@Id
-                             """;
-        
         var parameters = new { id };
         var result = await Transaction
-            .QueryAsync<CarCarClass>(query, parameters)
+            .QueryAsync<CarCarClass>(FindQuery, parameters)
             .ConfigureAwait(false);
         
         return result.SingleOrDefault();
     }
 
-    public override Task<int> InsertAsync(CarCarClass entity)
+    public override async Task<int> InsertAsync(CarCarClass entity)
     {
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+        parameters.Add("@CarId", entity.CarId);
+        parameters.Add("@ClassId", entity.ClassId);
+        parameters.Add("@Id", null, DbType.Int32, direction: ParameterDirection.Output);
+
+        await Transaction.ExecuteAsync(InsertQuery, parameters).ConfigureAwait(false);
+
+        return parameters.Get<int>("@Id");
     }
 
     public override async Task<int> InsertRangeAsync(IEnumerable<CarCarClass> entities)
     {
-        var table = new DataTable();
-        table.TableName = "[dbo].[class_car]";
-        table.Columns.Add("car_id", typeof(int));
-        table.Columns.Add("class_id", typeof(int));
-
-        foreach (var entity in entities)
-        {
-            var row = table.NewRow();
-            row["car_id"] = entity.CarId;
-            row["class_id"] = entity.ClassId;
-
-            table.Rows.Add(row);
-        }
+        var table = entities.PopulateTable();
         
         using var bulkInsert = new SqlBulkCopy(Transaction.Connection, SqlBulkCopyOptions.Default, Transaction);
         bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping("car_id", "car_id"));
@@ -68,23 +52,21 @@ public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRe
         return bulkInsert.RowsCopied;
     }
 
-    public override Task<bool> UpdateAsync(CarCarClass entity)
+    public override async Task<int> UpdateAsync(CarCarClass entity)
     {
-        throw new NotImplementedException();
+        var parameters = new { entity.Id, entity.ClassId, entity.CarId };
+        return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
     }
 
-    public override Task<int> DeleteAsync(int id)
+    public override async Task<int> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var parameters = new { id };
+        return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);
     }
     
     public async Task<IDictionary<int, IEnumerable<int>>> GetJoinsForCarIdsAsync(IEnumerable<int> ids)
     {
-        const string query = """
-                             SELECT car_id, c.class_id FROM [dbo].[class_car] c
-                             WHERE car_id IN @Ids
-                             """;
-        var results = await Transaction.QueryAsync<CarCarClass>(query, new { ids }).ConfigureAwait(false);
+        var results = await Transaction.QueryAsync<CarCarClass>(GetJoinsQuery, new { ids }).ConfigureAwait(false);
 
         var pairs = results.GroupBy(
             cc => cc.CarId,
@@ -94,4 +76,34 @@ public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRe
 
         return new Dictionary<int, IEnumerable<int>>(pairs);
     }
+    
+    private const string GetAllQuery = """
+                                       SELECT id, car_id AS CarId, class_id AS ClassId
+                                       FROM [dbo].[class_car] WITH (NOLOCK)
+                                       """;
+    
+    private const string FindQuery = """
+                                     SELECT id, car_id AS CarId, class_id AS ClassId
+                                     FROM [dbo].[class_car] WITH (NOLOCK)
+                                     WHERE id=@Id
+                                     """;
+
+    private const string InsertQuery = """
+                                       INSERT INTO [dbo].[class_car] (car_id, class_id)
+                                          VALUES (@CarId, @ClassId);
+                                          SELECT @Id = SCOPE_IDENTITY()
+                                       """;
+
+    private const string UpdateQuery = """
+                                       UPDATE [dbo].[class_car]
+                                       SET class_id=@ClassId, car_id=@CarId
+                                       WHERE id=@Id
+                                       """;
+    
+    private const string DeleteQuery = "DELETE FROM [dbo].[class_car] WHERE id=@Id";
+    
+    private const string GetJoinsQuery = """
+                                         SELECT car_id, c.class_id FROM [dbo].[class_car] c
+                                         WHERE car_id IN @Id
+                                         """;
 }

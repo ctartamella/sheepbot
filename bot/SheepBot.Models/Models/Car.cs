@@ -1,11 +1,14 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace SheepBot.Models;
 
+[Table("[dbo].[car]")]
 public class Car : ModelBase, IEquatable<Car>
 {
     // Properties
-    public string Name { get; init; } = default!;
-    public bool IsFree { get; init; }
-    public bool IsLegacy { get; init; }
+    public string Name { get; set; } = default!;
+    public bool IsFree { get; set; }
+    public bool IsLegacy { get; set; }
 
     // Relationships
     public List<CarClass> Classes { get; } = new();
@@ -32,15 +35,5 @@ public class Car : ModelBase, IEquatable<Car>
         hashCode.Add(IsFree);
         hashCode.Add(IsLegacy);
         return hashCode.ToHashCode();
-    }
-
-    public static bool operator ==(Car? left, Car? right)
-    {
-        return Equals(left, right);
-    }
-
-    public static bool operator !=(Car? left, Car? right)
-    {
-        return !Equals(left, right);
     }
 }

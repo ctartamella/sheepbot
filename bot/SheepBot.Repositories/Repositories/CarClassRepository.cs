@@ -1,71 +1,52 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using Dapper;
 using Dapper.Transaction;
 using Microsoft.Data.SqlClient;
 using SheepBot.Models;
+using SheepBot.Repositories.Helpers;
 using SheepBot.Repositories.Interfaces;
 
 namespace SheepBot.Repositories;
 
+[Table("[dbo].[class_car")]
 public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
 {
     public CarClassRepository(SqlTransaction transaction) : base(transaction) { }
-
+    
     public override async Task<IEnumerable<CarClass>> GetAllAsync()
     {
-        const string query = """
-                             SELECT class.id, class.name
-                             FROM [dbo].[class] WITH (NOLOCK)
-                             """;
-
-        var carClasses= await Transaction
-            .QueryAsync<CarClass>(query)
+        var results= await Transaction
+            .QueryAsync<CarClass>(GetAllQuery)
             .ConfigureAwait(false);
 
-        return carClasses ?? new List<CarClass>();
+        return results ?? new List<CarClass>();
     }
-    
+
     public override async Task<CarClass?> FindAsync(int id)
     {
-        const string query = """
-                             SELECT class.id, class.name
-                             FROM [dbo].[class] WITH (NOLOCK)
-                             WHERE class.id=@id
-                             """;
-        
         var parameters = new { id };
-        var carClasses = await Transaction
-            .QueryAsync<CarClass>(query , parameters)
+        var results = await Transaction
+            .QueryAsync<CarClass>(FindQuery , parameters)
             .ConfigureAwait(false);
 
-        return carClasses.SingleOrDefault();
+        return results.SingleOrDefault();
     }
 
     public override async Task<int> InsertAsync(CarClass entity)
     {
-        const string query = """
-                             INSERT INTO [dbo].[class] 
-                                 (name)
-                                 VALUES (@Name)
-                             """;
+        var parameters = new DynamicParameters();
+        parameters.Add("@Name", entity.Name, DbType.String);
+        parameters.Add("@Id", null, DbType.Int32, ParameterDirection.Output);
 
-        var carParameters = new { entity.Name };
+        await Transaction.ExecuteAsync(InsertQuery, parameters).ConfigureAwait(false);
 
-        return await Transaction.ExecuteAsync(query, carParameters).ConfigureAwait(false);
+        return parameters.Get<int>("@Id");
     }
 
     public override async Task<int> InsertRangeAsync(IEnumerable<CarClass> entities)
     {
-        var table = new DataTable();
-        table.TableName = "[dbo].[class]";
-        table.Columns.Add("name", typeof(string));
-        
-        foreach (var carClass in entities)
-        {
-            var row = table.NewRow();
-            row["name"] = carClass.Name;
-
-            table.Rows.Add(row);
-        }
+        var table = entities.PopulateTable();
         
         using var bulkInsert = new SqlBulkCopy(Transaction.Connection, SqlBulkCopyOptions.Default, Transaction);
         bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping("name", "name"));
@@ -75,26 +56,52 @@ public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
         return bulkInsert.RowsCopied;
     }
 
-    public override Task<bool> UpdateAsync(CarClass entity)
+    public override async Task<int> UpdateAsync(CarClass entity)
     {
-        throw new NotImplementedException();
+        var parameters = new { entity.Id, entity.Name };
+        return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
     }
-
+    
     public override async Task<int> DeleteAsync(int id)
     {
-        const string query = "DELETE FROM [dbo].[class] WHERE id=@id";
-
         var parameters = new { id };
-        return await Transaction.ExecuteAsync(query, parameters).ConfigureAwait(false);
+        return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);
     }
 
     public async Task<IEnumerable<CarClass>> GetClassesForIds(IEnumerable<int> ids)
     {
-        const string query = """
-                             SELECT c.* FROM [dbo].[class] c
-                             WHERE c.id IN @Ids
-                             """;
-        var results = await Transaction.QueryAsync<CarClass>(query, new { ids }).ConfigureAwait(false);
+        var results = await Transaction.QueryAsync<CarClass>(GetClassesForIdsQuery, new { ids }).ConfigureAwait(false);
         return results ?? new List<CarClass>();
     }
+    
+    private const string GetAllQuery ="""
+                                      SELECT class.id, class.name
+                                      FROM [dbo].[class] WITH (NOLOCK)
+                                      """;
+    
+    private const string FindQuery = """
+                                     SELECT class.id, class.name
+                                     FROM [dbo].[class] WITH (NOLOCK)
+                                     WHERE class.id=@id
+                                     """;
+    
+    private const string InsertQuery = """
+                                       INSERT INTO [dbo].[class]
+                                           (name)
+                                           VALUES (@Name)
+                                       SELECT @Id = SCOPE_IDENTITY()
+                                       """;
+    
+    private const string UpdateQuery = """
+                                       UPDATE [dbo].[class]
+                                       SET name=@Name
+                                       WHERE id=@Id
+                                       """;
+    
+    private const string DeleteQuery = "DELETE FROM [dbo].[class] WHERE id=@id";
+    
+    private const string GetClassesForIdsQuery = """
+                                                SELECT c.* FROM [dbo].[class] c
+                                                WHERE c.id IN @Ids
+                                                """;
 }

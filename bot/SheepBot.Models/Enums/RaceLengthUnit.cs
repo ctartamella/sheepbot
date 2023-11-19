@@ -1,6 +1,6 @@
 namespace SheepBot.Models.Enums;
 
-public enum RaceLengthUnit
+public enum RaceLengthUnit : int
 {
     Minutes,
     Hours,

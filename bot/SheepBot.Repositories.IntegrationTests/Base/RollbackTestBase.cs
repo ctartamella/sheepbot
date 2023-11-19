@@ -5,8 +5,8 @@ namespace SheepBot.Repositories.Tests.Base;
 public abstract class RollbackTestBase : IDisposable
 {
     private static readonly Random Random = new();
-    private const int MinSize = 100;
-    private const int MaxSize = 500;
+    private const int MinSize = 20;
+    private const int MaxSize = 100;
     
     protected static int NextRandom (int minSize = MinSize, int maxSize = MaxSize) => Random.Next(minSize, maxSize);
     

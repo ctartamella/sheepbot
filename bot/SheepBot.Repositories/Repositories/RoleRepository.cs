@@ -1,6 +1,9 @@
+using System.Data;
+using Dapper;
 using Dapper.Transaction;
 using Microsoft.Data.SqlClient;
 using SheepBot.Models;
+using SheepBot.Repositories.Helpers;
 using SheepBot.Repositories.Interfaces;
 
 namespace SheepBot.Repositories;
@@ -8,43 +11,90 @@ namespace SheepBot.Repositories;
 public class RoleRepository : RepositoryBase<Role>, IRoleRepository
 {
     public RoleRepository(SqlTransaction transaction) : base(transaction) { }
-    
+
     public override async Task<IEnumerable<Role>> GetAllAsync()
     {
-        const string query = "SELECT * FROM [dbo].[role]";
-
-        var result = await Transaction.QueryAsync<Role>(query).ConfigureAwait(false);
+        var result = await Transaction
+            .QueryAsync<Role>(GetAllQuery)
+            .ConfigureAwait(false);
         
         return result ?? new List<Role>();
     }
-    
+
     public override async Task<Role?> FindAsync(int id)
     {
-        const string query = "SELECT * FROM [dbo].[role] WHERE id=@id";
         var parameters = new { id };
 
-        var result = await Transaction.QueryAsync<Role>(query, parameters).ConfigureAwait(false);
+        var role = await Transaction
+            .QueryAsync<Role>(FindQuery, parameters)
+            .ConfigureAwait(false);
         
-        return result.SingleOrDefault();
+        return role.SingleOrDefault();
     }
 
-    public override Task<int> InsertAsync(Role entity)
+    public override async Task<int> InsertAsync(Role entity)
     {
-        throw new NotImplementedException();
+        var carParameters = new DynamicParameters();
+        carParameters.Add("@DiscordId", entity.DiscordId);
+        carParameters.Add("@RoleName", entity.RoleName);
+        carParameters.Add("@Id", null, DbType.Int32, direction: ParameterDirection.Output);
+
+        await Transaction.ExecuteAsync(InsertQuery, carParameters).ConfigureAwait(false);
+
+        return carParameters.Get<int>("@Id");
     }
 
-    public override Task<int> InsertRangeAsync(IEnumerable<Role> entities)
+    public override async Task<int> InsertRangeAsync(IEnumerable<Role> entities)
     {
-        throw new NotImplementedException();
+        var table = entities.PopulateTable();
+        
+        using var bulkInsert = new SqlBulkCopy(Transaction.Connection, SqlBulkCopyOptions.Default, Transaction);
+        bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping(nameof(Role.DiscordId), "discord_id"));
+        bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping(nameof(Role.RoleName), "role_name"));
+        bulkInsert.DestinationTableName = table.TableName;
+        
+        await bulkInsert.WriteToServerAsync(table).ConfigureAwait(false);
+        return bulkInsert.RowsCopied;
     }
 
-    public override Task<bool> UpdateAsync(Role entity)
+    public override async Task<int> UpdateAsync(Role entity)
     {
-        throw new NotImplementedException();
+        var parameters = new { entity.Id, entity.DiscordId, entity.RoleName };
+        return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
     }
-
-    public override Task<int> DeleteAsync(int id)
+    
+    public override async Task<int> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var parameters = new { id };
+        return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);
     }
+    
+    private const string GetAllQuery = """
+                                       SELECT id, 
+                                              discord_id AS DiscordId, 
+                                              role_name AS RoleName
+                                       FROM [dbo].[role] WITH (NOLOCK)
+                                       """;
+    
+    private const string FindQuery = """
+                                     SELECT id, 
+                                            discord_id AS DiscordId, 
+                                            role_name AS RoleName
+                                     FROM [dbo].[role] WITH (NOLOCK)
+                                     WHERE role.id=@Id
+                                     """;
+    
+    private const string InsertQuery = """
+                                       INSERT INTO [dbo].[role] (discord_id, role_name)
+                                          VALUES (@DiscordId, @RoleName);
+                                          SELECT @Id = SCOPE_IDENTITY()
+                                       """;
+    
+    private const string UpdateQuery = """
+                                       UPDATE [dbo].[role]
+                                       SET discord_id=@DiscordId, role_name=@RoleName
+                                       WHERE id=@Id
+                                       """;
+    
+    private const string DeleteQuery = "DELETE FROM [dbo].[role] WHERE id=@id";
 }

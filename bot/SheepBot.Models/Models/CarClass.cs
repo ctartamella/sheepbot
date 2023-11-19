@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace SheepBot.Models;
 
+[Table("[dbo].[class]")]
 public class CarClass : ModelBase, IEquatable<CarClass>
 {
     public string Name { get; set; } = default!;
@@ -24,15 +27,5 @@ public class CarClass : ModelBase, IEquatable<CarClass>
     public override int GetHashCode()
     {
         return Name.GetHashCode();
-    }
-
-    public static bool operator ==(CarClass? left, CarClass? right)
-    {
-        return Equals(left, right);
-    }
-
-    public static bool operator !=(CarClass? left, CarClass? right)
-    {
-        return !Equals(left, right);
     }
 }

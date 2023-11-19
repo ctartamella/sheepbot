@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Repositories", "bo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Services", "bot\SheepBot.Services\SheepBot.Services.csproj", "{E0F94958-1830-4074-9C1F-50764DF52F81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Repositories.Tests", "bot\SheepBot.Repositories.Tests\SheepBot.Repositories.Tests.csproj", "{3C5FF6BC-81A9-48E6-8483-DDE37CC1CFE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Repositories.IntegrationTests", "bot\SheepBot.Repositories.IntegrationTests\SheepBot.Repositories.IntegrationTests.csproj", "{3C5FF6BC-81A9-48E6-8483-DDE37CC1CFE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
