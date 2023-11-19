@@ -58,7 +58,7 @@ public class RaceRepository : RepositoryBase<Race>, IRaceRepository
         bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping(nameof(Race.PracticeTime), "practice_time"));
         bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping(nameof(Race.QualiTime), "quali_time"));
         bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping(nameof(Race.Length), "length"));
-        bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping(nameof(Race.Unit), "length_type_id"));
+        bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping(nameof(Race.Unit), "length_unit_id"));
         bulkInsert.DestinationTableName = table.TableName;
         
         await bulkInsert.WriteToServerAsync(table).ConfigureAwait(false);
@@ -94,7 +94,7 @@ public class RaceRepository : RepositoryBase<Race>, IRaceRepository
                                               practice_time AS PracticeTime, 
                                               quali_time AS QualiTime, 
                                               length, 
-                                              length_type_id AS Unit
+                                              length_unit_id AS Unit
                                        FROM [dbo].[race] WITH (NOLOCK)
                                        """;
     
@@ -105,13 +105,13 @@ public class RaceRepository : RepositoryBase<Race>, IRaceRepository
                                             practice_time AS PracticeTime, 
                                             quali_time AS QualiTime, 
                                             length, 
-                                            length_type_id AS Unit
+                                            length_unit_id AS Unit
                                      FROM [dbo].[race] WITH (NOLOCK)
                                      WHERE id=@Id
                                      """;
     
     private const string InsertQuery = """
-                                       INSERT INTO [dbo].[race] (series_id, track_id, practice_time, quali_time, length, length_type_id)
+                                       INSERT INTO [dbo].[race] (series_id, track_id, practice_time, quali_time, length, length_unit_id)
                                           VALUES (@SeriesId, @TrackId, @PracticeTime, @QualiTime, @Length, @LengthTypeId);
                                           SELECT @Id = SCOPE_IDENTITY()
                                        """;
@@ -119,7 +119,7 @@ public class RaceRepository : RepositoryBase<Race>, IRaceRepository
     private const string UpdateQuery = """
                                        UPDATE [dbo].[race]
                                        SET length=@Length, 
-                                           length_type_id=@Unit, 
+                                           length_unit_id=@Unit, 
                                            practice_time=@PracticeTime,
                                            quali_time=@QualiTime,
                                            series_id=@SeriesId,

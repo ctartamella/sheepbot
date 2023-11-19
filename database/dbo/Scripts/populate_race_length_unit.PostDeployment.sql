@@ -1,6 +1,6 @@
-PRINT 'Populating Lookup Table [dbo].[race_length_type]'
+PRINT 'Populating Lookup Table [dbo].[race_length_unit]'
 
-MERGE INTO [dbo].[race_length_type] as t
+MERGE INTO [dbo].[race_length_unit] as t
     USING (
         VALUES(1,'Minutes')
              ,(2,'Hours')
