@@ -5,9 +5,14 @@ namespace SheepBot.Models;
 [Table("[dbo].[class_car]")]
 public class CarCarClass : ModelBase, IEquatable<CarCarClass>
 {
+    // Properties
     public int ClassId { get; set; }
     public int CarId { get; set; }
 
+    // Relationships
+    public CarClass? Class { get; set; }
+    public Car? Car { get; set; }
+    
     public bool Equals(CarCarClass? other)
     {
         if (ReferenceEquals(null, other)) return false;
@@ -19,7 +24,7 @@ public class CarCarClass : ModelBase, IEquatable<CarCarClass>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((CarCarClass)obj);
     }
 

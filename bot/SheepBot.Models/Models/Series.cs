@@ -6,6 +6,7 @@ namespace SheepBot.Models;
 [Table("[dbo].[series]")]
 public class Series : ModelBase, IEquatable<Series>
 {
+    // Properties
     public string Name { get; set; } = default!;
     public int RoleId { get; set; }
     public SeriesType Type { get; set; }
@@ -13,9 +14,11 @@ public class Series : ModelBase, IEquatable<Series>
     public string? IracingUrl { get; set; }
     public string? Website { get; set; }
 
-    public Role Role { get; set; } = default!;
-    public IEnumerable<Race> Races { get; set; } = new List<Race>();
+    // Relationships
+    public Role? Role { get; set; }
+    public List<Race> Races { get; set; } = new();
 
+    // IEquatable
     public bool Equals(Series? other)
     {
         if (ReferenceEquals(null, other)) return false;
@@ -23,16 +26,16 @@ public class Series : ModelBase, IEquatable<Series>
         return Name == other.Name 
                && RoleId == other.RoleId 
                && Type == other.Type 
-               && DiscordServer == other.DiscordServer 
-               && IracingUrl == other.IracingUrl 
-               && Website == other.Website;
+               && string.Equals(DiscordServer, other.DiscordServer, StringComparison.InvariantCultureIgnoreCase) 
+               && string.Equals(IracingUrl, other.IracingUrl, StringComparison.InvariantCultureIgnoreCase) 
+               && string.Equals(Website, other.Website, StringComparison.InvariantCultureIgnoreCase);
     }
 
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((Series)obj);
     }
 

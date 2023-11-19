@@ -6,23 +6,26 @@ namespace SheepBot.Models;
 [Table("[dbo].[role]")]
 public class Role : ModelBase, IEquatable<Role>
 {
+    // Properties
     public long DiscordId { get; set; }
     public string RoleName { get; set; } = default!;
 
-    public IEnumerable<Series> Series { get; set; } = new List<Series>();
+    // Relationships
+    public List<Series> Series { get; set; } = new();
 
     public bool Equals(Role? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return DiscordId == other.DiscordId && RoleName == other.RoleName;
+        return DiscordId == other.DiscordId 
+               && string.Equals(RoleName, other.RoleName, StringComparison.InvariantCultureIgnoreCase);
     }
 
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((Role)obj);
     }
 

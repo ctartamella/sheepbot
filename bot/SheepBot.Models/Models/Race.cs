@@ -6,6 +6,7 @@ namespace SheepBot.Models;
 [Table("[dbo].[race]")]
 public class Race : ModelBase, IEquatable<Race>
 {
+    // Properties
     public int SeriesId { get; set; }
     public int TrackId { get; set; }
     public DateTimeOffset? PracticeTime { get; set; }
@@ -15,8 +16,9 @@ public class Race : ModelBase, IEquatable<Race>
 
     // Relationships
     public Series? Series { get; set; }
-    public Track Track { get; set; } = default!;
+    public Track? Track { get; set; }
     
+    // IEquatable
     public bool Equals(Race? other)
     {
         if (ReferenceEquals(null, other)) return false;
@@ -33,7 +35,7 @@ public class Race : ModelBase, IEquatable<Race>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((Race)obj);
     }
 

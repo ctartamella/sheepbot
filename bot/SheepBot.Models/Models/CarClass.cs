@@ -5,22 +5,25 @@ namespace SheepBot.Models;
 [Table("[dbo].[class]")]
 public class CarClass : ModelBase, IEquatable<CarClass>
 {
+    // Properties
     public string Name { get; set; } = default!;
 
-    public ICollection<Car> Cars { get; } = new List<Car>();
+    // Relationships
+    public List<Car> Cars { get; } = new();
 
+    // IEquatable
     public bool Equals(CarClass? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Name == other.Name;
+        return string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase);
     }
 
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((CarClass)obj);
     }
 
