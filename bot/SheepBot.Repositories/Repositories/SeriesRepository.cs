@@ -21,7 +21,7 @@ public class SeriesRepository : RepositoryBase<Series>, ISeriesRepository
         return result ?? new List<Series>();
     }
 
-    public override async Task<Series?> FindAsync(int id)
+    public override async Task<Series?> FindAsync(long id)
     {
         var parameters = new { id };
 
@@ -32,7 +32,7 @@ public class SeriesRepository : RepositoryBase<Series>, ISeriesRepository
         return series.SingleOrDefault();
     }
 
-    public override async Task<int> InsertAsync(Series entity)
+    public override async Task<long> InsertAsync(Series entity)
     {
         var carParameters = new DynamicParameters();
         carParameters.Add("@Name", entity.Name);
@@ -48,7 +48,7 @@ public class SeriesRepository : RepositoryBase<Series>, ISeriesRepository
         return carParameters.Get<int>("@Id");
     }
 
-    public override async Task<int> InsertRangeAsync(IEnumerable<Series> entities)
+    public override async Task<long> InsertRangeAsync(IEnumerable<Series> entities)
     {
         var table = entities.PopulateTable();
         
@@ -81,7 +81,7 @@ public class SeriesRepository : RepositoryBase<Series>, ISeriesRepository
         return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
     }
 
-    public override async Task<int> DeleteAsync(int id)
+    public override async Task<int> DeleteAsync(long id)
     {
         var parameters = new { id };
         return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);

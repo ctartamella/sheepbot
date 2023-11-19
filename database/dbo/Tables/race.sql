@@ -1,7 +1,7 @@
 CREATE TABLE [dbo].[race] (
-    [id]             INT                IDENTITY (1, 1) NOT NULL,
-    [series_id]      INT                NULL,
-    [track_id]       INT                NOT NULL,
+    [id]             BIGINT             IDENTITY (1, 1) NOT NULL,
+    [series_id]      BIGINT             NULL,
+    [track_id]       BIGINT             NOT NULL,
     [practice_time]  DATETIMEOFFSET (7) NULL,
     [quali_time]     DATETIMEOFFSET (7) NOT NULL,
     [length]         INT                NULL,

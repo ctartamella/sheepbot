@@ -15,11 +15,11 @@ public abstract class RepositoryBase<TModel> : IRepositoryBase<TModel>
     protected SqlTransaction Transaction { get; }
     
     public abstract Task<IEnumerable<TModel>> GetAllAsync();
-    public abstract Task<TModel?> FindAsync(int id);
-    public abstract Task<int> InsertAsync(TModel entity);
-    public abstract Task<int> InsertRangeAsync(IEnumerable<TModel> entities);
+    public abstract Task<TModel?> FindAsync(long id);
+    public abstract Task<long> InsertAsync(TModel entity);
+    public abstract Task<long> InsertRangeAsync(IEnumerable<TModel> entities);
     public abstract Task<int> UpdateAsync(TModel entity);
-    public abstract Task<int> DeleteAsync(int id);
+    public abstract Task<int> DeleteAsync(long id);
     
     public virtual async Task<IEnumerable<TModel>> FindAsync(Predicate<TModel> predicate)
     {

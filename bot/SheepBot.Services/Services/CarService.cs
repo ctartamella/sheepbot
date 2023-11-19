@@ -21,7 +21,7 @@ public class CarService : ICarService
         var joins = await _unitOfWork.CarCarClassRepository.GetJoinsForCarIdsAsync(carIds).ConfigureAwait(false);
         var classIds = joins.Values.SelectMany(x => x);
         var classes = await _unitOfWork.CarClassRepository.GetClassesForIds(classIds).ConfigureAwait(false);
-        var classDict = new Dictionary<int, CarClass>(classes.Select(c => new KeyValuePair<int, CarClass>(c.Id, c)));
+        var classDict = new Dictionary<long, CarClass>(classes.Select(c => new KeyValuePair<long, CarClass>(c.Id, c)));
         
         foreach (var car in cars)
         {

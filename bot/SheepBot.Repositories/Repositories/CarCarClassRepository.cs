@@ -17,7 +17,7 @@ public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRe
         return await Transaction.QueryAsync<CarCarClass>(GetAllQuery).ConfigureAwait(false);
     }
     
-    public override async Task<CarCarClass?> FindAsync(int id)
+    public override async Task<CarCarClass?> FindAsync(long id)
     {
         var parameters = new { id };
         var result = await Transaction
@@ -27,19 +27,19 @@ public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRe
         return result.SingleOrDefault();
     }
 
-    public override async Task<int> InsertAsync(CarCarClass entity)
+    public override async Task<long> InsertAsync(CarCarClass entity)
     {
         var parameters = new DynamicParameters();
         parameters.Add("@CarId", entity.CarId);
         parameters.Add("@ClassId", entity.ClassId);
-        parameters.Add("@Id", null, DbType.Int32, direction: ParameterDirection.Output);
+        parameters.Add("@Id", null, DbType.Int64, direction: ParameterDirection.Output);
 
         await Transaction.ExecuteAsync(InsertQuery, parameters).ConfigureAwait(false);
 
-        return parameters.Get<int>("@Id");
+        return parameters.Get<long>("@Id");
     }
 
-    public override async Task<int> InsertRangeAsync(IEnumerable<CarCarClass> entities)
+    public override async Task<long> InsertRangeAsync(IEnumerable<CarCarClass> entities)
     {
         var table = entities.PopulateTable();
         
@@ -58,23 +58,23 @@ public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRe
         return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
     }
 
-    public override async Task<int> DeleteAsync(int id)
+    public override async Task<int> DeleteAsync(long id)
     {
         var parameters = new { id };
         return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);
     }
     
-    public async Task<IDictionary<int, IEnumerable<int>>> GetJoinsForCarIdsAsync(IEnumerable<int> ids)
+    public async Task<IDictionary<long, IEnumerable<long>>> GetJoinsForCarIdsAsync(IEnumerable<long> ids)
     {
         var results = await Transaction.QueryAsync<CarCarClass>(GetJoinsQuery, new { ids }).ConfigureAwait(false);
 
         var pairs = results.GroupBy(
             cc => cc.CarId,
             cc => cc.ClassId,
-            (key, g) => new KeyValuePair<int, IEnumerable<int>>(key, g.ToList())
+            (key, g) => new KeyValuePair<long, IEnumerable<long>>(key, g.ToList())
         );
 
-        return new Dictionary<int, IEnumerable<int>>(pairs);
+        return new Dictionary<long, IEnumerable<long>>(pairs);
     }
     
     private const string GetAllQuery = """

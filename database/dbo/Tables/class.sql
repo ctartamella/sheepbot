@@ -1,5 +1,5 @@
 CREATE TABLE [dbo].[class] (
-    [id]          INT           NOT NULL IDENTITY(1,1),
+    [id]          BIGINT        NOT NULL IDENTITY(1,1),
     [name]        NVARCHAR (50) NOT NULL
 );
 GO

@@ -6,8 +6,8 @@ namespace SheepBot.Models;
 public class CarCarClass : ModelBase, IEquatable<CarCarClass>
 {
     // Properties
-    public int ClassId { get; set; }
-    public int CarId { get; set; }
+    public long ClassId { get; set; }
+    public long CarId { get; set; }
 
     // Relationships
     public CarClass? Class { get; set; }

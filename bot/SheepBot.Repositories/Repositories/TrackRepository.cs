@@ -21,7 +21,7 @@ public class TrackRepository : RepositoryBase<Track>, ITrackRepository
         return result ?? new List<Track>();
     }
 
-    public override async Task<Track?> FindAsync(int id)
+    public override async Task<Track?> FindAsync(long id)
     {
         var parameters = new { id };
 
@@ -32,7 +32,7 @@ public class TrackRepository : RepositoryBase<Track>, ITrackRepository
         return result.SingleOrDefault();
     }
 
-    public override async Task<int> InsertAsync(Track entity)
+    public override async Task<long> InsertAsync(Track entity)
     {
         var parameters = new DynamicParameters();
         parameters.Add("@Name", entity.Name);
@@ -45,7 +45,7 @@ public class TrackRepository : RepositoryBase<Track>, ITrackRepository
         return parameters.Get<int>("@Id");
     }
 
-    public override async Task<int> InsertRangeAsync(IEnumerable<Track> entities)
+    public override async Task<long> InsertRangeAsync(IEnumerable<Track> entities)
     {
         var table = entities.PopulateTable();
         
@@ -65,7 +65,7 @@ public class TrackRepository : RepositoryBase<Track>, ITrackRepository
         return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
     }
 
-    public override async Task<int> DeleteAsync(int id)
+    public override async Task<int> DeleteAsync(long id)
     {
         var parameters = new { id };
         return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);

@@ -8,7 +8,7 @@ public class Series : ModelBase, IEquatable<Series>
 {
     // Properties
     public string Name { get; set; } = default!;
-    public int RoleId { get; set; }
+    public long RoleId { get; set; }
     public SeriesType Type { get; set; }
     public string? DiscordServer { get; set; }
     public string? IracingUrl { get; set; }

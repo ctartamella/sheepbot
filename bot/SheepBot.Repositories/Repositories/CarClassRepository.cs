@@ -23,7 +23,7 @@ public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
         return results ?? new List<CarClass>();
     }
 
-    public override async Task<CarClass?> FindAsync(int id)
+    public override async Task<CarClass?> FindAsync(long id)
     {
         var parameters = new { id };
         var results = await Transaction
@@ -33,18 +33,18 @@ public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
         return results.SingleOrDefault();
     }
 
-    public override async Task<int> InsertAsync(CarClass entity)
+    public override async Task<long> InsertAsync(CarClass entity)
     {
         var parameters = new DynamicParameters();
         parameters.Add("@Name", entity.Name, DbType.String);
-        parameters.Add("@Id", null, DbType.Int32, ParameterDirection.Output);
+        parameters.Add("@Id", null, DbType.Int64, ParameterDirection.Output);
 
         await Transaction.ExecuteAsync(InsertQuery, parameters).ConfigureAwait(false);
 
-        return parameters.Get<int>("@Id");
+        return parameters.Get<long>("@Id");
     }
 
-    public override async Task<int> InsertRangeAsync(IEnumerable<CarClass> entities)
+    public override async Task<long> InsertRangeAsync(IEnumerable<CarClass> entities)
     {
         var table = entities.PopulateTable();
         
@@ -62,13 +62,13 @@ public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
         return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
     }
     
-    public override async Task<int> DeleteAsync(int id)
+    public override async Task<int> DeleteAsync(long id)
     {
         var parameters = new { id };
         return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<CarClass>> GetClassesForIds(IEnumerable<int> ids)
+    public async Task<IEnumerable<CarClass>> GetClassesForIds(IEnumerable<long> ids)
     {
         var results = await Transaction.QueryAsync<CarClass>(GetClassesForIdsQuery, new { ids }).ConfigureAwait(false);
         return results ?? new List<CarClass>();

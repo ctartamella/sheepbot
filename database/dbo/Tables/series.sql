@@ -1,7 +1,7 @@
 CREATE TABLE [dbo].[series] (
-    [id]             INT            NOT NULL IDENTITY(1,1),
+    [id]             BIGINT         NOT NULL IDENTITY(1,1),
     [name]           NVARCHAR (100) NOT NULL,
-    [role_id]        INT            NOT NULL,
+    [role_id]        BIGINT         NOT NULL,
     [series_type_id] INT            NOT NULL,
     [discord_server] NVARCHAR (30)  NULL,
     [iracing_url]    NVARCHAR (50)  NULL,

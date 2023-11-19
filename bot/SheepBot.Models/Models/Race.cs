@@ -7,8 +7,8 @@ namespace SheepBot.Models;
 public class Race : ModelBase, IEquatable<Race>
 {
     // Properties
-    public int SeriesId { get; set; }
-    public int TrackId { get; set; }
+    public long SeriesId { get; set; }
+    public long TrackId { get; set; }
     public DateTimeOffset? PracticeTime { get; set; }
     public DateTimeOffset QualiTime { get; set; }
     public int? Length { get; set; }

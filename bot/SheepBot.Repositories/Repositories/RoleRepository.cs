@@ -21,7 +21,7 @@ public class RoleRepository : RepositoryBase<Role>, IRoleRepository
         return result ?? new List<Role>();
     }
 
-    public override async Task<Role?> FindAsync(int id)
+    public override async Task<Role?> FindAsync(long id)
     {
         var parameters = new { id };
 
@@ -32,7 +32,7 @@ public class RoleRepository : RepositoryBase<Role>, IRoleRepository
         return role.SingleOrDefault();
     }
 
-    public override async Task<int> InsertAsync(Role entity)
+    public override async Task<long> InsertAsync(Role entity)
     {
         var carParameters = new DynamicParameters();
         carParameters.Add("@DiscordId", entity.DiscordId);
@@ -44,7 +44,7 @@ public class RoleRepository : RepositoryBase<Role>, IRoleRepository
         return carParameters.Get<int>("@Id");
     }
 
-    public override async Task<int> InsertRangeAsync(IEnumerable<Role> entities)
+    public override async Task<long> InsertRangeAsync(IEnumerable<Role> entities)
     {
         var table = entities.PopulateTable();
         
@@ -63,7 +63,7 @@ public class RoleRepository : RepositoryBase<Role>, IRoleRepository
         return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
     }
     
-    public override async Task<int> DeleteAsync(int id)
+    public override async Task<int> DeleteAsync(long id)
     {
         var parameters = new { id };
         return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);

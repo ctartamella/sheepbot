@@ -23,7 +23,7 @@ public class CarRepository : RepositoryBase<Car>, ICarRepository
         return result ?? new List<Car>();
     }
 
-    public override async Task<Car?> FindAsync(int id)
+    public override async Task<Car?> FindAsync(long id)
     {
         var parameters = new { id };
 
@@ -34,7 +34,7 @@ public class CarRepository : RepositoryBase<Car>, ICarRepository
         return result.SingleOrDefault();
     }
 
-    public override async Task<int> InsertAsync(Car entity)
+    public override async Task<long> InsertAsync(Car entity)
     {
         var parameters = new DynamicParameters();
         parameters.Add("@Name", entity.Name);
@@ -47,7 +47,7 @@ public class CarRepository : RepositoryBase<Car>, ICarRepository
         return parameters.Get<int>("@Id");
     }
 
-    public override async Task<int> InsertRangeAsync(IEnumerable<Car> entities)
+    public override async Task<long> InsertRangeAsync(IEnumerable<Car> entities)
     {
         var table = entities.PopulateTable();
         
@@ -68,7 +68,7 @@ public class CarRepository : RepositoryBase<Car>, ICarRepository
         return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
     }
 
-    public override async Task<int> DeleteAsync(int id)
+    public override async Task<int> DeleteAsync(long id)
     {
         var parameters = new { id };
         return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);

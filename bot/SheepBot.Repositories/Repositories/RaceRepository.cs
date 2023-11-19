@@ -21,7 +21,7 @@ public class RaceRepository : RepositoryBase<Race>, IRaceRepository
         return results ?? new List<Race>();
     }
 
-    public override async Task<Race?> FindAsync(int id)
+    public override async Task<Race?> FindAsync(long id)
     {
         var parameters = new { id };
 
@@ -32,7 +32,7 @@ public class RaceRepository : RepositoryBase<Race>, IRaceRepository
         return result.SingleOrDefault();
     }
 
-    public override async Task<int> InsertAsync(Race entity)
+    public override async Task<long> InsertAsync(Race entity)
     {
         var parameters = new DynamicParameters();
         parameters.Add("@SeriesId", entity.SeriesId);
@@ -48,7 +48,7 @@ public class RaceRepository : RepositoryBase<Race>, IRaceRepository
         return parameters.Get<int>("@Id");
     }
 
-    public override async Task<int> InsertRangeAsync(IEnumerable<Race> entities)
+    public override async Task<long> InsertRangeAsync(IEnumerable<Race> entities)
     {
         var table = entities.PopulateTable();
         
@@ -81,7 +81,7 @@ public class RaceRepository : RepositoryBase<Race>, IRaceRepository
         return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
     }
 
-    public override async Task<int> DeleteAsync(int id)
+    public override async Task<int> DeleteAsync(long id)
     {
         var parameters = new { id };
         return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);
