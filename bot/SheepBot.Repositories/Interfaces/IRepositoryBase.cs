@@ -1,12 +1,12 @@
 namespace SheepBot.Repositories.Interfaces;
 
-public interface IRepositoryBase<T>
+public interface IRepositoryBase<TModel>
 {
-    IEnumerable<T> GetAll();
-    T? Find(int id);
-    int Insert(T entity);
-    int InsertRange(IEnumerable<T> entities);
-    bool Update(T entity);
-    int Delete(int id);
-    int Delete(T entity);
+    Task<IEnumerable<TModel>> GetAllAsync();
+    Task<TModel?> FindAsync(int id);
+    Task<int> InsertAsync(TModel entity);
+    Task<int> InsertRangeAsync(IEnumerable<TModel> entities);
+    Task<bool> UpdateAsync(TModel entity);
+    Task<int> DeleteAsync(int id);
+    Task<int> DeleteAsync(TModel entity);
 }

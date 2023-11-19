@@ -10,37 +10,37 @@ public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
 {
     public CarClassRepository(SqlTransaction transaction) : base(transaction) { }
 
-    public override IEnumerable<CarClass> GetAll()
+    public override async Task<IEnumerable<CarClass>> GetAllAsync()
     {
         const string query = """
-                             SELECT class.*, car.id as CarId, car.name, car.is_free, car.is_legacy
-                             FROM [dbo].[class]
-                             LEFT JOIN dbo.class_car cc on class.id = cc.class_id
-                             LEFT JOIN dbo.car car on car.id = cc.car_id
+                             SELECT class.id, class.name
+                             FROM [dbo].[class] WITH (NOLOCK)
                              """;
 
-        var carClasses= Transaction.Query(query, SetChildren, splitOn: "CarId");
+        var carClasses= await Transaction
+            .QueryAsync<CarClass>(query)
+            .ConfigureAwait(false);
 
         return carClasses ?? new List<CarClass>();
     }
     
-    public override CarClass? Find(int id)
+    public override async Task<CarClass?> FindAsync(int id)
     {
         const string query = """
-                             SELECT class.*, car.id as CarId, car.name
-                             FROM [dbo].[class]
-                             INNER JOIN dbo.class_car cc on class.id = cc.class_id
-                             INNER JOIN dbo.car car on car.id = cc.car_id
+                             SELECT class.id, class.name
+                             FROM [dbo].[class] WITH (NOLOCK)
                              WHERE class.id=@id
                              """;
         
         var parameters = new { id };
-        var carClasses = Transaction.Query(query, SetChildren , parameters, splitOn: "CarId");
+        var carClasses = await Transaction
+            .QueryAsync<CarClass>(query , parameters)
+            .ConfigureAwait(false);
 
         return carClasses.SingleOrDefault();
     }
 
-    public override int Insert(CarClass entity)
+    public override async Task<int> InsertAsync(CarClass entity)
     {
         const string query = """
                              INSERT INTO [dbo].[class] 
@@ -50,10 +50,10 @@ public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
 
         var carParameters = new { entity.Name };
 
-        return Transaction.Execute(query, carParameters);
+        return await Transaction.ExecuteAsync(query, carParameters).ConfigureAwait(false);
     }
 
-    public override int InsertRange(IEnumerable<CarClass> entities)
+    public override async Task<int> InsertRangeAsync(IEnumerable<CarClass> entities)
     {
         var table = new DataTable();
         table.TableName = "[dbo].[class]";
@@ -69,33 +69,32 @@ public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
         
         using var bulkInsert = new SqlBulkCopy(Transaction.Connection, SqlBulkCopyOptions.Default, Transaction);
         bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping("name", "name"));
-        
         bulkInsert.DestinationTableName = table.TableName;
-        bulkInsert.WriteToServer(table);
-
+        
+        await bulkInsert.WriteToServerAsync(table).ConfigureAwait(false);
         return bulkInsert.RowsCopied;
     }
 
-    public override bool Update(CarClass entity)
+    public override Task<bool> UpdateAsync(CarClass entity)
     {
         throw new NotImplementedException();
     }
 
-    public override int Delete(int id)
+    public override async Task<int> DeleteAsync(int id)
     {
         const string query = "DELETE FROM [dbo].[class] WHERE id=@id";
 
         var parameters = new { id };
-        return Transaction.Execute(query, parameters);
+        return await Transaction.ExecuteAsync(query, parameters).ConfigureAwait(false);
     }
-    
-    private static readonly Func<CarClass, Car, CarClass> SetChildren = (carClass, car) =>
+
+    public async Task<IEnumerable<CarClass>> GetClassesForIds(IEnumerable<int> ids)
     {
-        if (car.Id != 0)
-        {
-            carClass.Cars.Add(car);
-        }
-            
-        return carClass;
-    };
+        const string query = """
+                             SELECT c.* FROM [dbo].[class] c
+                             WHERE c.id IN @Ids
+                             """;
+        var results = await Transaction.QueryAsync<CarClass>(query, new { ids }).ConfigureAwait(false);
+        return results ?? new List<CarClass>();
+    }
 }

@@ -1,5 +1,3 @@
-using System.Data;
-using Dapper;
 using Dapper.Transaction;
 using Microsoft.Data.SqlClient;
 using SheepBot.Models;
@@ -11,37 +9,39 @@ public class RaceRepository : RepositoryBase<Race>, IRaceRepository
 {
     public RaceRepository(SqlTransaction transaction) : base(transaction) { }
 
-    public override IEnumerable<Race> GetAll()
+    public override async Task<IEnumerable<Race>> GetAllAsync()
     {
         const string query = "SELECT * FROM [dbo].[race]";
 
-        return Transaction.Query<Race>(query) ?? new List<Race>();
+        var result = await Transaction.QueryAsync<Race>(query).ConfigureAwait(false);
+        return result ?? new List<Race>();
     }
     
-    public override Race? Find(int id)
+    public override async Task<Race?> FindAsync(int id)
     {
         const string query = "SELECT * FROM [dbo].[race] WHERE id=@id";
-        var parameters = new { id = id };
+        var parameters = new { id };
 
-        return Transaction.Query<Race>(query, parameters).SingleOrDefault();
+        var result = await Transaction.QueryAsync<Race>(query, parameters).ConfigureAwait(false);
+        return result.SingleOrDefault();
     }
 
-    public override int Insert(Race entity)
+    public override Task<int> InsertAsync(Race entity)
     {
         throw new NotImplementedException();
     }
 
-    public override int InsertRange(IEnumerable<Race> entities)
+    public override Task<int> InsertRangeAsync(IEnumerable<Race> entities)
     {
         throw new NotImplementedException();
     }
 
-    public override bool Update(Race entity)
+    public override Task<bool> UpdateAsync(Race entity)
     {
         throw new NotImplementedException();
     }
 
-    public override int Delete(int id)
+    public override Task<int> DeleteAsync(int id)
     {
         throw new NotImplementedException();
     }

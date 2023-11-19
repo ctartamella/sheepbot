@@ -10,43 +10,51 @@ public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRe
 {
     public CarCarClassRepository(SqlTransaction transaction) : base(transaction)
     {
+        
     }
-
-    public override IEnumerable<CarCarClass> GetAll()
-    {
-        const string query = "SELECT * FROM [dbo].[class_car]";
-        return Transaction.Query<CarCarClass>(query);
-    }
-
-    public override CarCarClass? Find(int id)
+    
+    public override async Task<IEnumerable<CarCarClass>> GetAllAsync()
     {
         const string query = """
-                             SELECT * 
-                             FROM [dbo].[class_car]
-                             WHERE id=@Id
+                             SELECT id, car_id, class_id
+                             FROM [dbo].[class_car] WITH (NOLOCK)
                              """;
-        var parameters = new { id };
-        
-        return Transaction.Query<CarCarClass>(query, parameters).SingleOrDefault();
+        return await Transaction.QueryAsync<CarCarClass>(query).ConfigureAwait(false);
     }
 
-    public override int Insert(CarCarClass entity)
+    public override async Task<CarCarClass?> FindAsync(int id)
+    {
+        const string query = """
+                             SELECT id, car_id, class_id
+                             FROM [dbo].[class_car] WITH (NOLOCK)
+                             WHERE id=@Id
+                             """;
+        
+        var parameters = new { id };
+        var result = await Transaction
+            .QueryAsync<CarCarClass>(query, parameters)
+            .ConfigureAwait(false);
+        
+        return result.SingleOrDefault();
+    }
+
+    public override Task<int> InsertAsync(CarCarClass entity)
     {
         throw new NotImplementedException();
     }
 
-    public override int InsertRange(IEnumerable<CarCarClass> entities)
+    public override async Task<int> InsertRangeAsync(IEnumerable<CarCarClass> entities)
     {
         var table = new DataTable();
         table.TableName = "[dbo].[class_car]";
-        table.Columns.Add("class_id", typeof(int));
         table.Columns.Add("car_id", typeof(int));
+        table.Columns.Add("class_id", typeof(int));
 
         foreach (var entity in entities)
         {
             var row = table.NewRow();
-            row["class_id"] = entity.ClassId;
             row["car_id"] = entity.CarId;
+            row["class_id"] = entity.ClassId;
 
             table.Rows.Add(row);
         }
@@ -55,18 +63,35 @@ public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRe
         bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping("car_id", "car_id"));
         bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping("class_id", "class_id"));
         bulkInsert.DestinationTableName = table.TableName;
-        bulkInsert.WriteToServer(table);
+        await bulkInsert.WriteToServerAsync(table).ConfigureAwait(false);
 
         return bulkInsert.RowsCopied;
     }
 
-    public override bool Update(CarCarClass entity)
+    public override Task<bool> UpdateAsync(CarCarClass entity)
     {
         throw new NotImplementedException();
     }
 
-    public override int Delete(int id)
+    public override Task<int> DeleteAsync(int id)
     {
         throw new NotImplementedException();
+    }
+    
+    public async Task<IDictionary<int, IEnumerable<int>>> GetJoinsForCarIdsAsync(IEnumerable<int> ids)
+    {
+        const string query = """
+                             SELECT car_id, c.class_id FROM [dbo].[class_car] c
+                             WHERE car_id IN @Ids
+                             """;
+        var results = await Transaction.QueryAsync<CarCarClass>(query, new { ids }).ConfigureAwait(false);
+
+        var pairs = results.GroupBy(
+            cc => cc.CarId,
+            cc => cc.ClassId,
+            (key, g) => new KeyValuePair<int, IEnumerable<int>>(key, g.ToList())
+        );
+
+        return new Dictionary<int, IEnumerable<int>>(pairs);
     }
 }

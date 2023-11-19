@@ -1,19 +1,20 @@
 using SheepBot.Repositories.Interfaces;
 
-namespace SheepBot.Repositories.Tests.Helpers;
+namespace SheepBot.Repositories.Tests.Base;
 
-public abstract class DatabaseTestBase : IDisposable
+public abstract class RollbackTestBase : IDisposable
 {
     private static readonly Random Random = new();
     private const int MinSize = 100;
     private const int MaxSize = 500;
+    
     protected static int NextRandom (int minSize = MinSize, int maxSize = MaxSize) => Random.Next(minSize, maxSize);
     
     private readonly string _connectionString = Environment.GetEnvironmentVariable("INTEGRATION_DB") ??
                            throw new InvalidProgramException("You must define the INTEGRATION_DB environment variable");
 
 
-    protected DatabaseTestBase()
+    protected RollbackTestBase()
     { 
         UnitOfWork = new UnitOfWork(_connectionString);
     }
@@ -34,3 +35,4 @@ public abstract class DatabaseTestBase : IDisposable
         GC.SuppressFinalize(this);
     }
 }
+

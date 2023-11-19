@@ -14,11 +14,11 @@ public abstract class RepositoryBase<TModel> : IRepositoryBase<TModel>
     
     protected SqlTransaction Transaction { get; }
     
-    public abstract IEnumerable<TModel> GetAll();
-    public abstract TModel? Find(int id);
-    public abstract int Insert(TModel entity);
-    public abstract int InsertRange(IEnumerable<TModel> entities);
-    public abstract bool Update(TModel entity);
-    public abstract int Delete(int id);
-    public virtual int Delete(TModel entity) => Delete(entity.Id);
+    public abstract Task<IEnumerable<TModel>> GetAllAsync();
+    public abstract Task<TModel?> FindAsync(int id);
+    public abstract Task<int> InsertAsync(TModel entity);
+    public abstract Task<int> InsertRangeAsync(IEnumerable<TModel> entities);
+    public abstract Task<bool> UpdateAsync(TModel entity);
+    public abstract Task<int> DeleteAsync(int id);
+    public virtual Task<int> DeleteAsync(TModel entity) => DeleteAsync(entity.Id);
 }
