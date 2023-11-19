@@ -11,11 +11,3 @@ CREATE TABLE [dbo].[race] (
 );
 GO
 
-ALTER TABLE [dbo].[race]
-    ADD CONSTRAINT [CK_race_1] CHECK ([length] IS NULL OR [length] IS NOT NULL AND [length_type_id] IS NOT NULL);
-GO
-
-ALTER TABLE [dbo].[race]
-    ADD CONSTRAINT [PK_race] PRIMARY KEY CLUSTERED ([id] ASC);
-GO
-
