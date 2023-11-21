@@ -10,30 +10,30 @@ using SheepBot.Repositories.Interfaces;
 namespace SheepBot.Repositories;
 
 [Table("[dbo].[class_car")]
-public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
+public class CarClassRepository : RepositoryBase<Class>, ICarClassRepository
 {
     public CarClassRepository(SqlTransaction transaction) : base(transaction) { }
     
-    public override async Task<IEnumerable<CarClass>> GetAllAsync()
+    public override async Task<IEnumerable<Class>> GetAllAsync()
     {
         var results= await Transaction
-            .QueryAsync<CarClass>(GetAllQuery)
+            .QueryAsync<Class>(GetAllQuery)
             .ConfigureAwait(false);
 
-        return results ?? new List<CarClass>();
+        return results ?? new List<Class>();
     }
 
-    public override async Task<CarClass?> FindAsync(long id)
+    public override async Task<Class?> FindAsync(long id)
     {
         var parameters = new { id };
         var results = await Transaction
-            .QueryAsync<CarClass>(FindQuery , parameters)
+            .QueryAsync<Class>(FindQuery , parameters)
             .ConfigureAwait(false);
 
         return results.SingleOrDefault();
     }
 
-    public override async Task<long> InsertAsync(CarClass entity)
+    public override async Task<long> InsertAsync(Class entity)
     {
         var parameters = new DynamicParameters();
         parameters.Add("@Name", entity.Name, DbType.String);
@@ -44,7 +44,7 @@ public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
         return parameters.Get<long>("@Id");
     }
 
-    public override async Task<long> InsertRangeAsync(IEnumerable<CarClass> entities)
+    public override async Task<long> InsertRangeAsync(IEnumerable<Class> entities)
     {
         var table = entities.PopulateTable();
         
@@ -56,7 +56,7 @@ public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
         return bulkInsert.RowsCopied;
     }
 
-    public override async Task<int> UpdateAsync(CarClass entity)
+    public override async Task<int> UpdateAsync(Class entity)
     {
         var parameters = new { entity.Id, entity.Name };
         return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
@@ -68,10 +68,10 @@ public class CarClassRepository : RepositoryBase<CarClass>, ICarClassRepository
         return await Transaction.ExecuteAsync(DeleteQuery, parameters).ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<CarClass>> GetClassesForIds(IEnumerable<long> ids)
+    public async Task<IEnumerable<Class>> GetClassesForIds(IEnumerable<long> ids)
     {
-        var results = await Transaction.QueryAsync<CarClass>(GetClassesForIdsQuery, new { ids }).ConfigureAwait(false);
-        return results ?? new List<CarClass>();
+        var results = await Transaction.QueryAsync<Class>(GetClassesForIdsQuery, new { ids }).ConfigureAwait(false);
+        return results ?? new List<Class>();
     }
     
     private const string GetAllQuery ="""

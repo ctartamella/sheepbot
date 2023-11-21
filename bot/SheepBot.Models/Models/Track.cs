@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SheepBot.Models;
 
 [Table("[dbo].[track]")]
-public class Track : ModelBase, IEquatable<Track>
+public sealed record Track : ModelBase
 {
     // Properties
-    public string Name { get; set; } = default!;
-    public bool IsFree { get; set; }
-    public bool IsLegacy { get; set; }
+    public string Name { get; init; } = default!;
+    public bool IsFree { get; init; }
+    public bool IsLegacy { get; init; }
 
     // Relationships
-    public List<Race> Races { get; set; } = new();
+    public List<Race> Races { get; } = new();
     
     // IEquatable
     public bool Equals(Track? other)
@@ -21,14 +21,6 @@ public class Track : ModelBase, IEquatable<Track>
         return string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase) 
                && IsFree == other.IsFree 
                && IsLegacy == other.IsLegacy;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-        return Equals((Track)obj);
     }
 
     public override int GetHashCode()

@@ -2,7 +2,7 @@ using SheepBot.Models;
 
 namespace SheepBot.Repositories.Interfaces;
 
-public interface ICarClassRepository : IRepositoryBase<CarClass>
+public interface ICarClassRepository : IRepositoryBase<Class>
 {
-    Task<IEnumerable<CarClass>> GetClassesForIds(IEnumerable<long> ids);
+    Task<IEnumerable<Class>> GetClassesForIds(IEnumerable<long> ids);
 }

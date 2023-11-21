@@ -1,4 +1,4 @@
-namespace SheepBot.Models;
+namespace SheepBot.Models.Interfaces;
 
 public interface IModelBase
 {

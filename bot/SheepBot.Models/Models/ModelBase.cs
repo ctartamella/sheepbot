@@ -1,6 +1,8 @@
+using SheepBot.Models.Interfaces;
+
 namespace SheepBot.Models;
 
-public abstract class ModelBase : IModelBase
+public abstract record ModelBase : IModelBase
 {
     public long Id { get; init; }
 }

@@ -3,22 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SheepBot.Models;
 
 [Table("[dbo].[car]")]
-public class Car : ModelBase, IEquatable<Car>
+public sealed record Car : ModelBase
 {
     // Properties
-    public string Name { get; set; } = default!;
-    public bool IsFree { get; set; }
-    public bool IsLegacy { get; set; }
+    public string Name { get; init; } = default!;
+    public bool IsFree { get; init; }
+    public bool IsLegacy { get; init; }
 
     // Relationships
-    public List<CarClass> Classes { get; } = new();
+    public List<Class> Classes { get; } = new();
 
     // IEquatable
-    public override bool Equals(object? obj)
-    {
-        return base.Equals(obj);
-    }
-
     public bool Equals(Car? other)
     {
         if (ReferenceEquals(null, other)) return false;
@@ -27,13 +22,9 @@ public class Car : ModelBase, IEquatable<Car>
                && IsFree == other.IsFree 
                && IsLegacy == other.IsLegacy;
     }
-
+    
     public override int GetHashCode()
     {
-        var hashCode = new HashCode();
-        hashCode.Add(Name, StringComparer.InvariantCultureIgnoreCase);
-        hashCode.Add(IsFree);
-        hashCode.Add(IsLegacy);
-        return hashCode.ToHashCode();
+        return HashCode.Combine(Name, IsFree, IsLegacy);
     }
 }

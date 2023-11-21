@@ -3,31 +3,32 @@ using Dapper;
 using Dapper.Transaction;
 using Microsoft.Data.SqlClient;
 using SheepBot.Models;
+using SheepBot.Models.Joins;
 using SheepBot.Repositories.Helpers;
 using SheepBot.Repositories.Interfaces;
 
 namespace SheepBot.Repositories;
 
-public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRepository
+public class CarCarClassRepository : RepositoryBase<CarClassJoin>, ICarCarClassRepository
 {
     public CarCarClassRepository(SqlTransaction transaction) : base(transaction) { }
     
-    public override async Task<IEnumerable<CarCarClass>> GetAllAsync()
+    public override async Task<IEnumerable<CarClassJoin>> GetAllAsync()
     {
-        return await Transaction.QueryAsync<CarCarClass>(GetAllQuery).ConfigureAwait(false);
+        return await Transaction.QueryAsync<CarClassJoin>(GetAllQuery).ConfigureAwait(false);
     }
     
-    public override async Task<CarCarClass?> FindAsync(long id)
+    public override async Task<CarClassJoin?> FindAsync(long id)
     {
         var parameters = new { id };
         var result = await Transaction
-            .QueryAsync<CarCarClass>(FindQuery, parameters)
+            .QueryAsync<CarClassJoin>(FindQuery, parameters)
             .ConfigureAwait(false);
         
         return result.SingleOrDefault();
     }
 
-    public override async Task<long> InsertAsync(CarCarClass entity)
+    public override async Task<long> InsertAsync(CarClassJoin entity)
     {
         var parameters = new DynamicParameters();
         parameters.Add("@CarId", entity.CarId);
@@ -39,7 +40,7 @@ public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRe
         return parameters.Get<long>("@Id");
     }
 
-    public override async Task<long> InsertRangeAsync(IEnumerable<CarCarClass> entities)
+    public override async Task<long> InsertRangeAsync(IEnumerable<CarClassJoin> entities)
     {
         var table = entities.PopulateTable();
         
@@ -52,7 +53,7 @@ public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRe
         return bulkInsert.RowsCopied;
     }
 
-    public override async Task<int> UpdateAsync(CarCarClass entity)
+    public override async Task<int> UpdateAsync(CarClassJoin entity)
     {
         var parameters = new { entity.Id, entity.ClassId, entity.CarId };
         return await Transaction.ExecuteAsync(UpdateQuery, parameters).ConfigureAwait(false);
@@ -66,7 +67,7 @@ public class CarCarClassRepository : RepositoryBase<CarCarClass>, ICarCarClassRe
     
     public async Task<IDictionary<long, IEnumerable<long>>> GetJoinsForCarIdsAsync(IEnumerable<long> ids)
     {
-        var results = await Transaction.QueryAsync<CarCarClass>(GetJoinsQuery, new { ids }).ConfigureAwait(false);
+        var results = await Transaction.QueryAsync<CarClassJoin>(GetJoinsQuery, new { ids }).ConfigureAwait(false);
 
         var pairs = results.GroupBy(
             cc => cc.CarId,

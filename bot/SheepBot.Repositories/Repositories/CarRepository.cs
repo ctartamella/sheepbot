@@ -3,7 +3,6 @@ using Dapper;
 using Dapper.Transaction;
 using Microsoft.Data.SqlClient;
 using SheepBot.Models;
-using SheepBot.Repositories.Helpers;
 using SheepBot.Repositories.Interfaces;
 
 namespace SheepBot.Repositories;
@@ -17,7 +16,15 @@ public class CarRepository : RepositoryBase<Car>, ICarRepository
     public override async Task<IEnumerable<Car>> GetAllAsync()
     {
         var result = await Transaction
-            .QueryAsync<Car>(GetAllQuery)
+            .QueryAsync<Car, Class, Car>(GetAllQuery, (car, carClass) =>
+            {
+                if (carClass is null) return car;
+                
+                car.Classes.Add(carClass);
+                carClass.Cars.Add(car);
+
+                return car;
+            }, splitOn : "id")
             .ConfigureAwait(false);
         
         return result ?? new List<Car>();
@@ -49,17 +56,7 @@ public class CarRepository : RepositoryBase<Car>, ICarRepository
 
     public override async Task<long> InsertRangeAsync(IEnumerable<Car> entities)
     {
-        var table = entities.PopulateTable();
-        
-        using var bulkInsert = new SqlBulkCopy(Transaction.Connection, SqlBulkCopyOptions.Default, Transaction);
-        bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping(nameof(Car.Name), "name"));
-        bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping(nameof(Car.IsFree), "is_free"));
-        bulkInsert.ColumnMappings.Add(new SqlBulkCopyColumnMapping(nameof(Car.IsLegacy), "is_legacy"));
-        bulkInsert.DestinationTableName = table.TableName;
-        
-        await bulkInsert.WriteToServerAsync(table).ConfigureAwait(false);
-        
-        return bulkInsert.RowsCopied;
+        return await Transaction.ExecuteAsync(InsertQuery, entities).ConfigureAwait(false);
     }
 
     public override async Task<int> UpdateAsync(Car entity)
@@ -75,8 +72,10 @@ public class CarRepository : RepositoryBase<Car>, ICarRepository
     }
     
     private const string GetAllQuery = """
-                                       SELECT car.id, car.name, car.is_free as IsFree, car.is_legacy as IsLegacy
+                                       SELECT car.*, class.*
                                        FROM [dbo].[car] car WITH (NOLOCK)
+                                       LEFT JOIN dbo.car_class cc on car.id = cc.car_id
+                                       LEFT JOIN dbo.class class on cc.class_id = class.id
                                        """;
     
     private const string FindQuery = """

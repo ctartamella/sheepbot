@@ -1,16 +1,17 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using SheepBot.Models;
+using SheepBot.Models.Joins;
 
 namespace SheepBot.Repositories.Helpers;
 
 public static class MappingExtensions
 {
 
-    public static DataTable PopulateTable(this IEnumerable<CarCarClass> entities)
+    public static DataTable PopulateTable(this IEnumerable<CarClassJoin> entities)
     {
         var table = new DataTable();
-        table.TableName = GetTableName<CarCarClass>();
+        table.TableName = GetTableName<CarClassJoin>();
         table.Columns.Add("car_id", typeof(int));
         table.Columns.Add("class_id", typeof(int));
 
@@ -26,10 +27,10 @@ public static class MappingExtensions
         return table;
     }
     
-    public static DataTable PopulateTable(this IEnumerable<CarClass> entities)
+    public static DataTable PopulateTable(this IEnumerable<Class> entities)
     {
         var table = new DataTable();
-        table.TableName = GetTableName<CarClass>();
+        table.TableName = GetTableName<Class>();
         table.Columns.Add("name", typeof(string));
         
         foreach (var carClass in entities)
@@ -68,22 +69,12 @@ public static class MappingExtensions
     {
         var table = new DataTable();
         table.TableName = GetTableName<Race>();
-        table.Columns.Add(nameof(Race.SeriesId), typeof(int));
         table.Columns.Add(nameof(Race.TrackId), typeof(int));
-        table.Columns.Add(nameof(Race.PracticeTime), typeof(DateTimeOffset));
-        table.Columns.Add(nameof(Race.QualiTime), typeof(DateTimeOffset));
-        table.Columns.Add(nameof(Race.Length), typeof(int));
-        table.Columns.Add(nameof(Race.Unit), typeof(int));
         
         foreach (var car in entities)
         {
             var row = table.NewRow();
-            row[nameof(Race.SeriesId)] = car.SeriesId;
             row[nameof(Race.TrackId)] =  car.TrackId;
-            row[nameof(Race.PracticeTime)] = car.PracticeTime;
-            row[nameof(Race.QualiTime)] = car.QualiTime;
-            row[nameof(Race.Length)] =  car.Length;
-            row[nameof(Race.Unit)] = car.Unit;
 
             table.Rows.Add(row);
         }

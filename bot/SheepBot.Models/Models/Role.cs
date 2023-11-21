@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SheepBot.Models;
 
 [Table("[dbo].[role]")]
-public class Role : ModelBase, IEquatable<Role>
+public sealed record Role : ModelBase
 {
     // Properties
-    public long DiscordId { get; set; }
-    public string RoleName { get; set; } = default!;
+    public long DiscordId { get; init; }
+    public string RoleName { get; init; } = default!;
 
     // Relationships
-    public List<Series> Series { get; set; } = new();
+    public List<Series> Series { get; } = new();
 
     public bool Equals(Role? other)
     {
@@ -20,15 +20,7 @@ public class Role : ModelBase, IEquatable<Role>
         return DiscordId == other.DiscordId 
                && string.Equals(RoleName, other.RoleName, StringComparison.InvariantCultureIgnoreCase);
     }
-
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-        return Equals((Role)obj);
-    }
-
+    
     public override int GetHashCode()
     {
         return HashCode.Combine(DiscordId, RoleName);
