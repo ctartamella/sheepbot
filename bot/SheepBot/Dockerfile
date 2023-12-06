@@ -8,9 +8,10 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS restore
 WORKDIR /src
 COPY SheepBot.sln ./
 COPY SheepBot/SheepBot.csproj ./SheepBot/
-COPY SheepBot.Models/SheepBot.Models.csproj ./SheepBot.Models/
-COPY SheepBot.Repositories/SheepBot.Repositories.csproj ./SheepBot.Repositories/
-COPY SheepBot.Services/SheepBot.Services.csproj ./SheepBot.Services/
+COPY SheepBot.Application/SheepBot.Application.csproj ./SheepBot.Application/
+COPY SheepBot.Domain/SheepBot.Domain.csproj ./SheepBot.Domain/
+COPY SheepBot.Infrastructure/SheepBot.Infrastructure.csproj ./SheepBot.Infrastructure/
+COPY SheepBot.iRacing.Client/SheepBot.iRacing.Client.csproj ./SheepBot.iRacing.Client/
 
 RUN dotnet restore "SheepBot/SheepBot.csproj"
 
