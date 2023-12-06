@@ -1,0 +1,26 @@
+version: "3"
+services: 
+  bot:
+    build:
+      dockerfile: ./src/SheepBot/Dockerfile
+      context: .
+      args:
+        BUILD_MODE: ${BUILD_MODE:-Debug}
+    image: ctartamella/sheepbot:latest
+    container_name: sheepbot
+    depends_on:
+      - sqlserver
+    environment:
+      SHEEPBOT__CONNECTIONSTRINGS__DEFAULT: ""
+      SHEEPBOT__IRACING__EMAIL: ""
+      SHEEPBOT__IRACING__PASSWORD: ""
+      SHEEPBOT__DISCORD__GUILDID: ""
+      SHEEPBOT__DISCORD__TOKEN: ""
+    
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - SA_PASSWORD=${SA_PASSWORD}
+      - ACCEPT_EULA=Y
+    ports:
+      - "5434:1433"

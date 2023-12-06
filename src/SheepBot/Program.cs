@@ -9,10 +9,15 @@ using SheepBot.Models;
 using SheepBot.SyncWorkers.Workers;
 using SheepBot.Workers;
 
+// ReSharper disable StringLiteralTypo
+
 var configurationRoot = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", false, true)
+    .AddEnvironmentVariables("SHEEPBOT")
     .AddUserSecrets(typeof(Program).Assembly)
     .Build();
+
+// ReSharper restore StringLiteralTypo
 
 var config = configurationRoot.Get<Config>();
 
