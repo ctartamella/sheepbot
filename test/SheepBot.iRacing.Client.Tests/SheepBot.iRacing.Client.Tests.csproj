@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SheepBot.iRacing.Client\SheepBot.iRacing.Client.csproj" />
+    <ProjectReference Include="..\..\src\SheepBot.iRacing.Client\SheepBot.iRacing.Client.csproj" />
   </ItemGroup>
 
 </Project>

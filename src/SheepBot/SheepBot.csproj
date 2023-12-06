@@ -26,8 +26,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\SheepBot.Application\SheepBot.Application.csproj" />
-      <ProjectReference Include="..\..\SheepBot.Infrastructure\SheepBot.Infrastructure.csproj" />
+      <ProjectReference Include="..\SheepBot.Application\SheepBot.Application.csproj" />
+      <ProjectReference Include="..\SheepBot.Infrastructure\SheepBot.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
