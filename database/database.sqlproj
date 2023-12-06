@@ -3,9 +3,13 @@
   <Sdk Name="Microsoft.Build.Sql" Version="0.1.12-preview" />
   <PropertyGroup>
     <Name>database</Name>
-    <ProjectGuid>{9E6605A3-D033-4FB0-8A0E-98DABA9EDED9}</ProjectGuid>
+    <ProjectGuid>{9e6605a3-d033-4fb0-8a0e-98daba9eded9}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
     <ModelCollation>1033, CI</ModelCollation>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
   </PropertyGroup>
   <ItemGroup>
     <None Include="dbo\Scripts\populate_race_length_unit.PostDeployment.sql" />
@@ -14,6 +18,36 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="dbo\Scripts" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="dbo\User Defined Types\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\track_type.sql" />
+    <Build Include="dbo\Tables\track_config_1.sql" />
+    <Build Include="dbo\Tables\track_1.sql" />
+    <Build Include="dbo\Tables\singleton_event_1.sql" />
+    <Build Include="dbo\Tables\series_event_1.sql" />
+    <Build Include="dbo\Tables\role_1.sql" />
+    <Build Include="dbo\Tables\race_type_1.sql" />
+    <Build Include="dbo\Tables\race_1.sql" />
+    <Build Include="dbo\Tables\length_unit_1.sql" />
+    <Build Include="dbo\Tables\event_class_1.sql" />
+    <Build Include="dbo\Tables\event_1.sql" />
+    <Build Include="dbo\Tables\class_1.sql" />
+    <Build Include="dbo\Tables\car_class_1.sql" />
+    <Build Include="dbo\Tables\car_1.sql" />
+    <Build Include="dbo\Stored Procedures\merge_tracks.sql" />
+    <Build Include="dbo\Stored Procedures\merge_track_configs.sql" />
+    <Build Include="dbo\Stored Procedures\merge_classes.sql" />
+    <Build Include="dbo\Stored Procedures\merge_cars.sql" />
+    <Build Include="dbo\Stored Procedures\merge_car_classes.sql" />
+    <Build Include="dbo\User Defined Types\TrackType.sql" />
+    <Build Include="dbo\User Defined Types\TrackConfigType.sql" />
+    <Build Include="dbo\User Defined Types\ClassType.sql" />
+    <Build Include="dbo\User Defined Types\CarType.sql" />
+    <Build Include="dbo\User Defined Types\CarClassType.sql" />
   </ItemGroup>
   <Target Name="BeforeBuild">
     <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />

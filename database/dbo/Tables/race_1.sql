@@ -1,4 +1,4 @@
-CREATE TABLE [dbo].[race] (
+﻿CREATE TABLE [dbo].[race] (
     [id]             BIGINT             IDENTITY (1, 1) NOT NULL,
     [track_id]       BIGINT             NOT NULL,
     [event_id]       BIGINT             NOT NULL,
@@ -10,7 +10,6 @@ CREATE TABLE [dbo].[race] (
     CONSTRAINT [PK_race] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_race_event] FOREIGN KEY ([event_id]) REFERENCES [dbo].[event] ([id]),
     CONSTRAINT [FK_race_length_unit] FOREIGN KEY ([length_unit_id]) REFERENCES [dbo].[length_unit] ([id]),
-    ALTER TABLE [dbo].[race]
-    ADD CONSTRAINT [FK_race_track] FOREIGN KEY ([track_id]) REFERENCES [dbo].[track] ([id]);
+    CONSTRAINT [FK_race_track] FOREIGN KEY ([track_id]) REFERENCES [dbo].[track] ([id])
 );
-GO
+
