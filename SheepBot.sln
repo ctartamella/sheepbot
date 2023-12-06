@@ -25,6 +25,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot", "src\SheepBot\Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.SyncWorkers", "src\SheepBot.SyncWorkers\SheepBot.SyncWorkers.csproj", "{30F0BD88-66EE-4BC8-8915-DA531E4BBAD4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{A1897062-F3F6-4062-96C7-05EB78E77B61}"
+	ProjectSection(SolutionItems) = preProject
+		src\SheepBot\Dockerfile = src\SheepBot\Dockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,34 +1,29 @@
 ﻿ # syntax=docker/dockerfile:1
 ARG BUILD_MODE=Release
 
-FROM mcr.microsoft.com/dotnet/runtime:7.0 AS base
+FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS restore
-WORKDIR /src
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS restore
+WORKDIR /app
 COPY SheepBot.sln ./
-COPY SheepBot/SheepBot.csproj ./SheepBot/
-COPY SheepBot.Application/SheepBot.Application.csproj ./SheepBot.Application/
-COPY SheepBot.Domain/SheepBot.Domain.csproj ./SheepBot.Domain/
-COPY SheepBot.Infrastructure/SheepBot.Infrastructure.csproj ./SheepBot.Infrastructure/
-COPY SheepBot.iRacing.Client/SheepBot.iRacing.Client.csproj ./SheepBot.iRacing.Client/
+COPY src/SheepBot/SheepBot.csproj ./src/SheepBot/
+COPY src/SheepBot.Application/SheepBot.Application.csproj ./src/SheepBot.Application/
+COPY src/SheepBot.Domain/SheepBot.Domain.csproj ./src/SheepBot.Domain/
+COPY src/SheepBot.Infrastructure/SheepBot.Infrastructure.csproj ./src/SheepBot.Infrastructure/
+COPY src/SheepBot.iRacing.Client/SheepBot.iRacing.Client.csproj ./src/SheepBot.iRacing.Client/
 
-RUN dotnet restore "SheepBot/SheepBot.csproj"
+RUN dotnet restore "src/SheepBot/SheepBot.csproj"
 
 FROM restore as build
 COPY . .
 
-WORKDIR /src/SheepBot
-ARG BUILD_MODE
-
-RUN dotnet build SheepBot.csproj --no-restore -c ${BUILD_MODE} -o /app/build
-
-FROM build AS publish
+WORKDIR /app/src/SheepBot
 ARG BUILD_MODE
 
 RUN dotnet publish SheepBot.csproj -c ${BUILD_MODE} -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "SheepBot.dll"]
