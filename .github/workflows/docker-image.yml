@@ -2,17 +2,35 @@ name: Container Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
 
 jobs:
 
-  build:
-
+  sync_host:
+    name: Build Sync Host
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file SheepBot/Dockerfile --tag sheepbot:$(date +%s)
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
+      - name: Application Version
+        id: version
+        uses: paulhatch/semantic-version@v5.3.0
+        with:
+         debug: true
+         version_format: "${major}.${minor}.${patch}-pre${increment}"
+  
+      - name: Build and Push
+        uses:  mr-smithers-excellent/docker-build-push@v4
+        with:
+          image: "ctartamella/sheepbot"
+          dockerfile: "./src/SheepBot/Dockerfile"
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: docker.io
+          tag: ${{ steps.version.outputs.version }}
