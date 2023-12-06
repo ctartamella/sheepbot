@@ -25,19 +25,19 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\track_type.sql" />
-    <Build Include="dbo\Tables\track_config_1.sql" />
-    <Build Include="dbo\Tables\track_1.sql" />
-    <Build Include="dbo\Tables\singleton_event_1.sql" />
-    <Build Include="dbo\Tables\series_event_1.sql" />
-    <Build Include="dbo\Tables\role_1.sql" />
-    <Build Include="dbo\Tables\race_type_1.sql" />
-    <Build Include="dbo\Tables\race_1.sql" />
-    <Build Include="dbo\Tables\length_unit_1.sql" />
-    <Build Include="dbo\Tables\event_class_1.sql" />
-    <Build Include="dbo\Tables\event_1.sql" />
-    <Build Include="dbo\Tables\class_1.sql" />
-    <Build Include="dbo\Tables\car_class_1.sql" />
-    <Build Include="dbo\Tables\car_1.sql" />
+    <Build Include="dbo\Tables\track_config.sql" />
+    <Build Include="dbo\Tables\track.sql" />
+    <Build Include="dbo\Tables\singleton_event.sql" />
+    <Build Include="dbo\Tables\series_event.sql" />
+    <Build Include="dbo\Tables\role.sql" />
+    <Build Include="dbo\Tables\race_type.sql" />
+    <Build Include="dbo\Tables\race.sql" />
+    <Build Include="dbo\Tables\length_unit.sql" />
+    <Build Include="dbo\Tables\event_class.sql" />
+    <Build Include="dbo\Tables\event.sql" />
+    <Build Include="dbo\Tables\class.sql" />
+    <Build Include="dbo\Tables\car_class.sql" />
+    <Build Include="dbo\Tables\car.sql" />
     <Build Include="dbo\Stored Procedures\merge_tracks.sql" />
     <Build Include="dbo\Stored Procedures\merge_track_configs.sql" />
     <Build Include="dbo\Stored Procedures\merge_classes.sql" />

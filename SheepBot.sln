@@ -1,24 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot", "bot\SheepBot\SheepBot.csproj", "{85F9E35D-50C9-421C-A5F9-E0B29D1378FE}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheepBot", "bot\SheepBot\SheepBot.csproj", "{85F9E35D-50C9-421C-A5F9-E0B29D1378FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Domain", "SheepBot.Domain\SheepBot.Domain.csproj", "{6A1A74D5-9A39-41E4-8006-19AF306A4C38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheepBot.Domain", "SheepBot.Domain\SheepBot.Domain.csproj", "{6A1A74D5-9A39-41E4-8006-19AF306A4C38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Application", "SheepBot.Application\SheepBot.Application.csproj", "{9EDAAE2E-F1BA-4DBF-B531-79FA9334F48F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheepBot.Application", "SheepBot.Application\SheepBot.Application.csproj", "{9EDAAE2E-F1BA-4DBF-B531-79FA9334F48F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.Infrastructure", "SheepBot.Infrastructure\SheepBot.Infrastructure.csproj", "{F8889050-7128-4DDB-AB61-5630860AC942}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheepBot.Infrastructure", "SheepBot.Infrastructure\SheepBot.Infrastructure.csproj", "{F8889050-7128-4DDB-AB61-5630860AC942}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.iRacing.Client", "SheepBot.iRacing.Client\SheepBot.iRacing.Client.csproj", "{3CA09602-3358-4716-B793-117CEC1BB4E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheepBot.iRacing.Client", "SheepBot.iRacing.Client\SheepBot.iRacing.Client.csproj", "{3CA09602-3358-4716-B793-117CEC1BB4E0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{61478B2C-77D6-44C9-B886-8EE8D6ECC698}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.iRacing.Client.Tests", "SheepBot.iRacing.Client.Tests\SheepBot.iRacing.Client.Tests.csproj", "{8D290C6C-30AF-4CF7-9770-BB6D2CCEB902}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheepBot.iRacing.Client.Tests", "SheepBot.iRacing.Client.Tests\SheepBot.iRacing.Client.Tests.csproj", "{8D290C6C-30AF-4CF7-9770-BB6D2CCEB902}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepBot.SyncWorkers", "SheepBot.SyncWorkers\SheepBot.SyncWorkers.csproj", "{BD407B69-0430-467C-999E-35F6CDF443F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SheepBot.SyncWorkers", "SheepBot.SyncWorkers\SheepBot.SyncWorkers.csproj", "{BD407B69-0430-467C-999E-35F6CDF443F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{DDC6E9F5-8DC4-4597-9D23-51E10D97BDFE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{2BE97BE7-B47D-439F-8AF0-CA97C36BCC8B}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "database", "database\database.sqlproj", "{9E6605A3-D033-4FB0-8A0E-98DABA9EDED9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66F6DA75-19CA-421C-9905-F16F7912131F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,12 +61,24 @@ Global
 		{BD407B69-0430-467C-999E-35F6CDF443F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD407B69-0430-467C-999E-35F6CDF443F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD407B69-0430-467C-999E-35F6CDF443F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E6605A3-D033-4FB0-8A0E-98DABA9EDED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E6605A3-D033-4FB0-8A0E-98DABA9EDED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E6605A3-D033-4FB0-8A0E-98DABA9EDED9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9E6605A3-D033-4FB0-8A0E-98DABA9EDED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E6605A3-D033-4FB0-8A0E-98DABA9EDED9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E6605A3-D033-4FB0-8A0E-98DABA9EDED9}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{8D290C6C-30AF-4CF7-9770-BB6D2CCEB902} = {61478B2C-77D6-44C9-B886-8EE8D6ECC698}
-		{3CA09602-3358-4716-B793-117CEC1BB4E0} = {DDC6E9F5-8DC4-4597-9D23-51E10D97BDFE}
-		{9EDAAE2E-F1BA-4DBF-B531-79FA9334F48F} = {2BE97BE7-B47D-439F-8AF0-CA97C36BCC8B}
 		{6A1A74D5-9A39-41E4-8006-19AF306A4C38} = {2BE97BE7-B47D-439F-8AF0-CA97C36BCC8B}
+		{9EDAAE2E-F1BA-4DBF-B531-79FA9334F48F} = {2BE97BE7-B47D-439F-8AF0-CA97C36BCC8B}
 		{F8889050-7128-4DDB-AB61-5630860AC942} = {2BE97BE7-B47D-439F-8AF0-CA97C36BCC8B}
+		{3CA09602-3358-4716-B793-117CEC1BB4E0} = {DDC6E9F5-8DC4-4597-9D23-51E10D97BDFE}
+		{8D290C6C-30AF-4CF7-9770-BB6D2CCEB902} = {61478B2C-77D6-44C9-B886-8EE8D6ECC698}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C80E9B85-8F1D-4A5F-B031-B1795B8CBEC4}
 	EndGlobalSection
 EndGlobal
