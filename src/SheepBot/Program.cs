@@ -4,7 +4,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SheepBot.Application.Helpers;
 using SheepBot.Infrastructure.Helpers;
+using SheepBot.iRacing.Client.Helpers;
 using SheepBot.Models;
+using SheepBot.SyncWorkers.Workers;
 using SheepBot.Workers;
 
 var configurationRoot = new ConfigurationBuilder()
@@ -26,9 +28,10 @@ var host = Host.CreateDefaultBuilder(args)
         var connectionString = configurationRoot.GetConnectionString("Default") ?? throw new InvalidDataException();
 
         services
-            //.AddIRacingClient(config.IracingUrl, config.IracingEmail, config.IracingPassword)
+            .AddIRacingClient(config.iRacing)
             .AddApplication(connectionString)
             .AddInfrastructure(connectionString)
+            .AddHostedService<TrackWorker>()
             .AddHostedService<BotService>(_ => new BotService(config.Discord));
     })
     .Build();

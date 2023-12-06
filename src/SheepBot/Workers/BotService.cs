@@ -75,9 +75,11 @@ public sealed class BotService : BackgroundService
 
         try
         {
-            await _client.Rest.CreateGuildCommand(guildCommand.Build(), _guildId);
+            await _client.Rest
+                .CreateGuildCommand(guildCommand.Build(), _guildId)
+                .ConfigureAwait(false);
         }
-        catch (ApplicationCommandException exception)
+        catch (HttpException exception)
         {
             var json = JsonConvert.SerializeObject(exception, Formatting.Indented);
             Console.WriteLine(json);
