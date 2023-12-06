@@ -31,4 +31,4 @@ jobs:
         with:
           push: true
           tags: "ctartamella/sheepbot"
-          file: "{{defaultContext}}:src/SheepBot/Dockerfile"
+          file: "{context}/src/SheepBot/Dockerfile"
