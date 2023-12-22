@@ -25,12 +25,31 @@ services:
     environment:
       - SA_PASSWORD=${DbPassword}
       - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
     ports:
       - "5434:1433"
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${DbPassword} -Q "SELECT 1" -b -o /dev/null
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
     volumes:
       - sql_data:/var/opt/mssql/data 
       - sql_logs:/var/opt/mssql/log
       - sql_secrets:/var/opt/mssql/secrets
+
+  sqlserver-init:
+    image: dreitier/mssql-init-db-env:latest
+    depends_on: sqlserver
+    environment:
+      DATABASE_HOST: sqlserver
+      MASTER_LOGIN: ${DbUser}
+      MASTER_PASSWORD: ${DbPassword}
+      DATABASE_NAME: ${DbName}
+      DATABASE_LOGIN: ${DbUser}
+      DATABASE_PASSWORD: ${DbPassword}
+      TRUST_SERVER_CERTIFICATE: 1
 
 volumes:
   sql_data:
