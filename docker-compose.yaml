@@ -11,16 +11,17 @@ services:
     depends_on:
       - sqlserver
     environment:
-      SHEEPBOT__CONNECTIONSTRINGS__DEFAULT: ""
-      SHEEPBOT__IRACING__EMAIL: ""
-      SHEEPBOT__IRACING__PASSWORD: ""
-      SHEEPBOT__DISCORD__GUILDID: ""
-      SHEEPBOT__DISCORD__TOKEN: ""
+      VERSION: ${VERSION}
+      SHEEPBOT__CONNECTIONSTRINGS__DEFAULT: ${ConnectionString}
+      SHEEPBOT__IRACING__EMAIL: ${IracingEmail}
+      SHEEPBOT__IRACING__PASSWORD: ${IracingPassword}
+      SHEEPBOT__DISCORD__GUILDID: ${DiscordGuild}
+      SHEEPBOT__DISCORD__TOKEN: ${DiscordToken}
     
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
-      - SA_PASSWORD=${SA_PASSWORD}
+      - SA_PASSWORD=${DbPassword}
       - ACCEPT_EULA=Y
     ports:
       - "5434:1433"
