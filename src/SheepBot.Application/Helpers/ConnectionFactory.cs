@@ -4,14 +4,9 @@ using SheepBot.Application.Interfaces;
 
 namespace SheepBot.Application.Helpers;
 
-public class ConnectionFactory : IConnectionFactory
+public class ConnectionFactory(string connectionString) : IConnectionFactory
 {
-    public ConnectionFactory(string connectionString)
-    {
-        ConnectionString = connectionString;
-    }
-    
-    public string ConnectionString { get; }
+    public string ConnectionString { get; } = connectionString;
 
     public IDbConnection GetConnection()
     {

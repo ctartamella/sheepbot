@@ -9,7 +9,6 @@ namespace SheepBot.Domain.Entities;
 [Index("RaceId", Name = "Index_singleton_event_1", IsUnique = true)]
 public partial record SingletonEvent : ModelBase
 {
-    [Key]
     [Column("event_id")]
     public long EventId { get; init; }
 

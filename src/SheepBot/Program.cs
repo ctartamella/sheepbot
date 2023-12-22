@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Discord.Interactions;
+using Discord.WebSocket;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -6,14 +8,13 @@ using SheepBot.Application.Helpers;
 using SheepBot.Infrastructure.Helpers;
 using SheepBot.iRacing.Client.Helpers;
 using SheepBot.Models;
-using SheepBot.SyncWorkers.Workers;
 using SheepBot.Workers;
 
 // ReSharper disable StringLiteralTypo
 
 var configurationRoot = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", false, true)
-    .AddEnvironmentVariables("SHEEPBOT")
+    .AddEnvironmentVariables("Sheepbot")
     .AddUserSecrets(typeof(Program).Assembly)
     .Build();
 
@@ -33,11 +34,21 @@ var host = Host.CreateDefaultBuilder(args)
         var connectionString = configurationRoot.GetConnectionString("Default") ?? throw new InvalidDataException();
 
         services
+            .AddSingleton(config.Discord)
+            .AddSingleton(config.iRacing)
+            .AddSingleton(new InteractionServiceConfig
+            {
+                DefaultRunMode = RunMode.Async,
+                InteractionCustomIdDelimiters = new[] { ';' }
+            })
             .AddIRacingClient(config.iRacing)
             .AddApplication(connectionString)
-            .AddInfrastructure(connectionString)
-            .AddHostedService<TrackWorker>()
-            .AddHostedService<BotService>(_ => new BotService(config.Discord));
+            .AddInfrastructure()
+            .AddSingleton<DiscordSocketClient>()
+            .AddSingleton<InteractionService>()
+            //.AddHostedService<TrackWorker>()
+            .AddHostedService<InteractionHandlingService>()
+            .AddHostedService<BotService>();
     })
     .Build();
 

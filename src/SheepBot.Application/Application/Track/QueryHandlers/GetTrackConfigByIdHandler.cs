@@ -1,16 +1,16 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SheepBot.Application.Application.Track.Queries;
+using SheepBot.Domain.Entities;
 using SheepBot.Infrastructure.Context;
 
 namespace SheepBot.Application.Application.Track.QueryHandlers;
 
-// ReSharper disable once UnusedType.Global
-public class GetTrackByIdHandler(SheepContext context) : IRequestHandler<GetTrackById, Domain.Entities.Track?>
+public class GetTrackConfigByIdHandler(SheepContext context) : IRequestHandler<GetTrackConfigById, TrackConfig?>
 {
-    public async Task<Domain.Entities.Track?> Handle(GetTrackById request, CancellationToken cancellationToken)
+    public async Task<TrackConfig?> Handle(GetTrackConfigById request, CancellationToken cancellationToken)
     {
-        return await context.Tracks
+        return await context.TrackConfigs
             .FirstOrDefaultAsync(t => t.Id == request.Id, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
     }

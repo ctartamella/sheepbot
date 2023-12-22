@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SheepBot.Application.Interfaces;
 using SheepBot.Domain.Entities;
+using SheepBot.Domain.Enums;
 
 namespace SheepBot.Infrastructure.Context;
 
@@ -29,13 +31,10 @@ public partial class SheepContext : DbContext
     public virtual DbSet<Role> Roles { get; set; } = null!;
 
     public virtual DbSet<SingletonEvent> SingletonEvents { get; set; } = null!;
-
+    
     public virtual DbSet<Track> Tracks { get; set; } = null!;
 
-    public virtual DbSet<TrackConfig> TrackConfigs { get; set; }
-    
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Name=ConnectionStrings:Local");
+    public virtual DbSet<TrackConfig> TrackConfigs { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -127,7 +126,7 @@ public partial class SheepContext : DbContext
         {
             entity.HasKey(e => e.Id).IsClustered(false);
 
-            entity.HasIndex(e => e.IracingId, "Index_iracing_id")
+            entity.HasIndex(e => e.TrackId, "Index_track_id")
                 .IsUnique()
                 .IsClustered();
         });
@@ -136,8 +135,9 @@ public partial class SheepContext : DbContext
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.HasOne(d => d.Track).WithMany(p => p.TrackConfigs)
-                .HasPrincipalKey(p => p.IracingId)
+            entity.HasOne(d => d.Track)
+                .WithMany(p => p.TrackConfigs)
+                .HasPrincipalKey(p => p.TrackId)
                 .HasForeignKey(d => d.TrackId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_track_config_track");
