@@ -9,8 +9,27 @@ on:
 
 jobs:
 
-  build:
-    name: Build
+  build-db:
+    name: Build Database
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3.1
+      
+      - name: Build DACPAC
+        run: msbuild /p:TargetFrameworkVersion=v4.7.2 ${{ github.workspace }}/database/database.sqlproj
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: dacpac
+          path: ${{ github.workspace }}/database/bin/Debug/
+
+  build-app:
+    name: Build App
     runs-on: [ self-hosted, build]
 
     steps:
@@ -27,14 +46,15 @@ jobs:
          version_format: "${major}.${minor}.${patch}-pre${increment}"
   
       - name: Build and Push
-        uses:  mr-smithers-excellent/docker-build-push@v4
+        uses:  mr-smithers-excellent/docker-build-push@v6.2
         with:
           image: "ctartamella/sheepbot"
           dockerfile: "./src/SheepBot/Dockerfile"
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.io
-          tag: ${{ steps.version.outputs.version }}
+          tags: ${{ steps.version.outputs.version }}
+          buildArgs: BUILD_MODE=Release
       
       - name: Store version
         run: echo ${{ steps.version.outputs.version }} >> version
@@ -48,7 +68,7 @@ jobs:
     name: Deploy Dev
     runs-on: [self-hosted, dev]
     environment: DEV
-    needs: [ build ]
+    needs: [ build-app, build-db ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2

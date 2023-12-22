@@ -13,7 +13,7 @@ services:
     environment:
       VERSION: ${VERSION}
       Environment: ${ENVIRONMENT}
-      ConnectionStrings__Default: ${ConnectionString}
+      ConnectionStrings__Default: Server=${DbServer};Database=${DbName};User=${DbUser};Password=${DbPassword};TrustServerCertificate=true
       iRacing__Email: ${IracingEmail}
       iRacing__Password: ${IracingPassword}
       Discord__GuildId: ${DiscordGuild}
