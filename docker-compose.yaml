@@ -12,14 +12,15 @@ services:
       - sqlserver
     environment:
       VERSION: ${VERSION}
-      SHEEPBOT__CONNECTIONSTRINGS__DEFAULT: ${ConnectionString}
-      SHEEPBOT__IRACING__EMAIL: ${IracingEmail}
-      SHEEPBOT__IRACING__PASSWORD: ${IracingPassword}
-      SHEEPBOT__DISCORD__GUILDID: ${DiscordGuild}
-      SHEEPBOT__DISCORD__TOKEN: ${DiscordToken}
+      Sheepbot__ConnectionStrings__Default: ${ConnectionString}
+      Sheepbot__iRacing__Email: ${IracingEmail}
+      Sheepbot__iRacing__Password: ${IracingPassword}
+      Sheepbot__Discord__GuildId: ${DiscordGuild}
+      Sheepbot__Discord__Token: ${DiscordToken}
     
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
     environment:
       - SA_PASSWORD=${DbPassword}
       - ACCEPT_EULA=Y
