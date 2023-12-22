@@ -48,7 +48,7 @@ jobs:
           fetch-depth: 0
 
       - name: Populate Environment
-        run: echo "${{secrets.ENV_FILE }}" > .env
+        run: echo "${{secrets.ENV_FILE }}\nVERSION=${{ steps.version.outputs.version }}" > .env && echo
 
       - name: Docker Up
-        run: docker-compose --env-file .env -f docker-compose.yml up -d --build -e VERSION=${{ steps.version.outputs.version }}
+        run: docker-compose --env-file .env -f docker-compose.yml up -d --build
