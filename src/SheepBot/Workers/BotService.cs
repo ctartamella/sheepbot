@@ -2,6 +2,7 @@ using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using SheepBot.Domain.Config;
+using SheepBot.Models;
 
 namespace SheepBot.Workers;
 
@@ -17,6 +18,7 @@ public sealed class BotService : ServiceBase
         ArgumentNullException.ThrowIfNull(client);
 
         _token = settings.Token;
+        Console.WriteLine(_token);
         _client = client;
         _client.Log += Log;
     }
