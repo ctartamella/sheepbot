@@ -65,7 +65,7 @@ jobs:
           rm .env
           touch .env
           echo "${{ secrets.ENV_FILE }}" > .env
-          echo "VERSION=${{ env.VERSION }}"" >> .env
+          echo "VERSION=${{ env.VERSION }}" >> .env
 
       - name: Docker Pull
         run: docker pull ctartamella/sheepbot:${{ env.VERSION }}
