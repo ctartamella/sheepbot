@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  sync_host:
+  build:
     name: Build Sync Host
     runs-on: ubuntu-latest
 
@@ -35,3 +35,19 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.io
           tag: ${{ steps.version.outputs.version }}
+
+  deploy:
+    name: Deploy Dev
+    runs-on: [self-hosted, dev]
+    environment: DEV
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Populate Environment
+        run: echo "${{secrets.ENV_FILE }}" > .env
+
+      - name: Docker Up
+        run: docker-compose -f "docker-compose.yml" up -d --build --env-file .env -e VERSION=${{ steps.version.outputs.version }}

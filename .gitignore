@@ -632,3 +632,5 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,jetbrains+all,jetbrains,jetbrains+iml
 bot/.idea/.idea.SheepBot/.idea/
+
+.DS_Store
