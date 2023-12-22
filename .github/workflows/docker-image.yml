@@ -10,7 +10,7 @@ on:
 jobs:
 
   build:
-    name: Build Sync Host
+    name: Build
     runs-on: [ self-hosted, build]
 
     steps:
@@ -35,8 +35,16 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.io
           tag: ${{ steps.version.outputs.version }}
+      
+      - name: Store image name
+        run: echo ${{ steps.push.outputs.version }} >> version
+      
+      - uses: actions/upload-artifact@v2
+        with:
+          name: version
+          path: version
 
-  deploy:
+  deploy-dev:
     name: Deploy Dev
     runs-on: [self-hosted, dev]
     environment: DEV
@@ -47,15 +55,20 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/download-artifact@v2
+        with:
+          name: version
+
       - name: Populate Environment
         run: |
+          echo "VERSION=$(cat version)" >> $GITHUB_OUTPUT
           rm .env
           touch .env
-          echo "${{secrets.ENV_FILE }}" > .env
-          echo "VERSION=${{steps.version.outputs.version}} >> .env"
+          echo "${{ secrets.ENV_FILE }}" > .env
+          echo "VERSION=${{ env.VERSION }}"" >> .env
 
       - name: Docker Pull
-        run: docker pull ctartamella/sheepbot:${{ steps.version.outputs.version }}
+        run: docker pull ctartamella/sheepbot:${{ env.VERSION }}
 
       - name: Docker Up
         run: docker-compose --env-file .env -f docker-compose.yaml up -d
