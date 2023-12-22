@@ -14,14 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Navigate to Workspace
-        run: cd database
-
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.3.1
       
       - name: Build DACPAC
-        run: msbuild database.sqlproj /p:TargetFrameworkVersion=v4.7.2
+        run: msbuild /p:TargetFrameworkVersion=v4.7.2 ${{ github.workspace }}/database/database.sqlproj
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.2
