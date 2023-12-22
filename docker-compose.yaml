@@ -6,7 +6,7 @@ services:
       context: .
       args:
         BUILD_MODE: ${BUILD_MODE:-Debug}
-    image: ctartamella/sheepbot:latest
+    image: ctartamella/sheepbot:${VERSION}
     container_name: sheepbot
     depends_on:
       - sqlserver
