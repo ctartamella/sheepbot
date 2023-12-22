@@ -62,7 +62,7 @@ jobs:
       - name: Populate Environment
         run: |
           cat version
-          echo "VERSION=$(cat version)" >> $GITHUB_OUTPUT
+          echo "VERSION=$(cat version)" >> $GITHUB_ENV
           rm .env
           touch .env
           echo "${{ secrets.ENV_FILE }}" > .env
