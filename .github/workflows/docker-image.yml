@@ -61,12 +61,11 @@ jobs:
 
       - name: Populate Environment
         run: |
-          cat version
-          echo "VERSION=$(cat version)" >> $GITHUB_ENV
+          echo "VERSION=$(cat version)"
           rm .env
           touch .env
           echo "${{ secrets.ENV_FILE }}" > .env
-          echo "VERSION=${{ env.VERSION }}" >> .env
+          # echo "VERSION=${{ env.VERSION }}" >> .env
 
       - name: Docker Pull
         run: |
