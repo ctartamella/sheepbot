@@ -36,7 +36,7 @@ jobs:
           registry: docker.io
           tag: ${{ steps.version.outputs.version }}
       
-      - name: Store image name
+      - name: Store version
         run: echo ${{ steps.push.outputs.version }} >> version
       
       - uses: actions/upload-artifact@v2
@@ -61,6 +61,7 @@ jobs:
 
       - name: Populate Environment
         run: |
+          cat version
           echo "VERSION=$(cat version)" >> $GITHUB_OUTPUT
           rm .env
           touch .env
