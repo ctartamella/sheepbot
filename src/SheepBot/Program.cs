@@ -14,7 +14,7 @@ using SheepBot.Workers;
 
 var configurationRoot = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", false, true)
-    .AddEnvironmentVariables("Sheepbot")
+    .AddEnvironmentVariables("Sheepbot__")
     .AddUserSecrets(typeof(Program).Assembly)
     .Build();
 
