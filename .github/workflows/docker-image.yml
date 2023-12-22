@@ -11,7 +11,7 @@ jobs:
 
   build:
     name: Build Sync Host
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, build]
 
     steps:
       - name: Checkout
@@ -48,7 +48,14 @@ jobs:
           fetch-depth: 0
 
       - name: Populate Environment
-        run: echo "${{secrets.ENV_FILE }}" > .env && echo
+        run: |
+          rm .env
+          touch .env
+          echo "${{secrets.ENV_FILE }}" > .env
+          echo "VERSION=${{steps.version.outputs.version}} >> .env"
+
+      - name: Docker Pull
+        run: docker pull ctartamella/sheepbot:${{ steps.version.outputs.version }}
 
       - name: Docker Up
-        run: docker-compose --env-file .env -f docker-compose.yaml up -d --build
+        run: docker-compose --env-file .env -f docker-compose.yaml up -d
