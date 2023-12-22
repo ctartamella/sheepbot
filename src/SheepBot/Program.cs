@@ -20,13 +20,7 @@ var configurationRoot = new ConfigurationBuilder()
 
 // ReSharper restore StringLiteralTypo
 
-var config = configurationRoot.Get<Config>();
-
-if (config is null)
-{
-    throw new InvalidDataException("Can not parse configuration. Exiting.");
-}
-
+var config = Config.GetFrom(configurationRoot);
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureLogging(builder => builder.AddConsole())
     .ConfigureServices(services =>

@@ -25,3 +25,12 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - "5434:1433"
+    volumes:
+      - sql_data:/var/opt/mssql/data 
+      - sql_logs:/var/opt/mssql/log
+      - sql_secrets:/var/opt/mssql/secrets
+
+volumes:
+  sql_data:
+  sql_logs:
+  sql_secrets:
