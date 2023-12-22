@@ -69,7 +69,9 @@ jobs:
           echo "VERSION=${{ env.VERSION }}" >> .env
 
       - name: Docker Pull
-        run: docker pull ctartamella/sheepbot:${{ env.VERSION }}
+        run: |
+          docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker pull ctartamella/sheepbot:${{ env.VERSION }}
 
       - name: Docker Up
         run: docker-compose --env-file .env -f docker-compose.yaml up -d
