@@ -13,7 +13,7 @@ services:
     environment:
       VERSION: ${VERSION}
       Environment: ${ENVIRONMENT}
-      ConnectionStrings__Default: Server=${DbServer};Database=${DbName};User=${DbUser};Password=${DbPassword};TrustServerCertificate=true
+      ConnectionStrings__Default: Server=${DbHost};Database=${DbName};User=${DbUser};Password=${DbPassword};TrustServerCertificate=true
       iRacing__Email: ${IracingEmail}
       iRacing__Password: ${IracingPassword}
       Discord__GuildId: ${DiscordGuild}
@@ -41,7 +41,8 @@ services:
 
   sqlserver-init:
     image: dreitier/mssql-init-db-env:latest
-    depends_on: sqlserver
+    depends_on: 
+      - sqlserver
     environment:
       DATABASE_HOST: sqlserver
       MASTER_LOGIN: ${DbUser}
