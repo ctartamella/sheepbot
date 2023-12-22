@@ -29,14 +29,14 @@ public class TrackInfoModule(IMediator mediator) : BaseIRacingModule(mediator)
         var isValid = int.TryParse(trackId, out var id);
         if (!isValid)
         {
-            await ModifyOriginalResponseAsync("Invalid track ID.  This is likely a bug.").ConfigureAwait(false);
+            await RespondAsync("Invalid track ID.  This is likely a bug.").ConfigureAwait(false);
             return;
         }
 
         var track = await mediator.Send(new GetTrackById {Id = id}).ConfigureAwait(false);
         if (track is null)
         {
-            await ModifyOriginalResponseAsync("Invalid track ID.  This is likely a bug.").ConfigureAwait(false);
+            await RespondAsync("Invalid track ID.  This is likely a bug.").ConfigureAwait(false);
             return;
         }
         
