@@ -66,6 +66,7 @@ jobs:
           touch .env
           echo "${{ secrets.ENV_FILE }}" >> .env
           echo "VERSION=$(cat version)" >> .env
+          echo "ENVIRONMENT=dev" >> .env
 
       - name: Docker Pull
         run: |

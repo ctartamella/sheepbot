@@ -12,11 +12,17 @@ using SheepBot.Workers;
 
 // ReSharper disable StringLiteralTypo
 
-var configurationRoot = new ConfigurationBuilder()
+var environment = Environment.GetEnvironmentVariable("Environment");
+var configurationBuilder = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", false, true)
-    .AddEnvironmentVariables("Sheepbot__")
-    .AddUserSecrets(typeof(Program).Assembly)
-    .Build();
+    .AddEnvironmentVariables();
+
+if (!string.IsNullOrWhiteSpace(environment))
+{
+    configurationBuilder.AddUserSecrets<Program>();
+}
+
+var configurationRoot = configurationBuilder.Build();
 
 // ReSharper restore StringLiteralTypo
 

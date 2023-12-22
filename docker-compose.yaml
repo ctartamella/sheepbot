@@ -12,11 +12,12 @@ services:
       - sqlserver
     environment:
       VERSION: ${VERSION}
-      Sheepbot__ConnectionStrings__Default: ${ConnectionString}
-      Sheepbot__iRacing__Email: ${IracingEmail}
-      Sheepbot__iRacing__Password: ${IracingPassword}
-      Sheepbot__Discord__GuildId: ${DiscordGuild}
-      Sheepbot__Discord__Token: ${DiscordToken}
+      Environment: ${ENVIRONMENT}
+      ConnectionStrings__Default: ${ConnectionString}
+      iRacing__Email: ${IracingEmail}
+      iRacing__Password: ${IracingPassword}
+      Discord__GuildId: ${DiscordGuild}
+      Discord__Token: ${DiscordToken}
     
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
