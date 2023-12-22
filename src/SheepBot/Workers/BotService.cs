@@ -18,7 +18,7 @@ public sealed class BotService : ServiceBase
         ArgumentNullException.ThrowIfNull(client);
 
         _token = settings.Token;
-        Console.WriteLine(_token);
+        logger.LogWarning(_token);
         _client = client;
         _client.Log += Log;
     }
