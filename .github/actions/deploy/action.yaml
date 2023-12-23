@@ -67,6 +67,7 @@ runs:
         sa-password: ${{ inputs.sa-password }}
 
     - name: 'Cleanup folder'
+      shell: bash
       run: |
         ls -la ./
         rm -rf ./* || true
