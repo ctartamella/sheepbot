@@ -13,4 +13,8 @@ runs:
     - name: Read Version
       id: read
       shell: bash
-      run: echo "version=$(cat version)" >> $GITHUB_OUTPUT
+      run: |
+        cat version
+        echo "version<<EOF" >> $GITHUB_OUTPUT
+        echo "$(cat version)" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
