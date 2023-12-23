@@ -31,7 +31,7 @@ runs:
     - name: Create DB
       shell: bash
       run: |
-        SQL=$(cat <<-EOF
+        read -d '' SQL << EOF
             IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${{ inputs.db-name }}')
             BEGIN
               CREATE DATABASE ${{ inputs.db-name }}
