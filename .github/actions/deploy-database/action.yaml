@@ -5,6 +5,12 @@ inputs:
   connection-string:
     description: Connection string for the database
     required: true
+  sa-password:
+    required: true
+  db-name:
+    required: true
+  db-host:
+    required: true
   path:
     required: true
     
@@ -20,7 +26,18 @@ runs:
     - name: Install SQL tools
       uses: potatoqualitee/mssqlsuite@v1.7
       with:
-        install: sqlpackage
+        install: sqlclient, sqlpackage
+
+    - name: Create DB
+      shell: bash
+      run: |
+        SQL=$(cat <<-EOF
+            IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${{ inputs.db-name }}')
+            BEGIN
+              CREATE DATABASE ${{ inputs.db-name }}
+            END
+        EOF
+        sqlcmd -S ${{ inputs.db-host }} -U sa -P ${{ inputs.sa-password }} -d tempdb -Q $SQL
 
     - name: Deploy DACPAC
       shell: bash

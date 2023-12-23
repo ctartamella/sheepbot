@@ -97,7 +97,7 @@ jobs:
 
   deploy-dev:
     name: Deploy Dev
-    runs-on: [self-hosted, dev]
+    runs-on: ubuntu-latest
     environment: DEV
     if: contains(github.ref_name, 'dev')
     needs: [ build-app, build-db ]
@@ -115,9 +115,7 @@ jobs:
           iracing-email: ${{ vars.IRACINGEMAIL }}
           iracing-password: ${{ secrets.IRACINGPASSWORD }}
           db-host: sqlserver
-          db-user: sheepbot
           db-name: sheepbot
-          db-password: ${{ secrets.DBPASSWORD }}
           sa-password: ${{ secrets.SAPASSWORD }}
           docker-user: ${{ secrets.DOCKER_USER }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}

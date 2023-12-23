@@ -38,20 +38,6 @@ services:
       - sql_logs:/var/opt/mssql/log
       - sql_secrets:/var/opt/mssql/secrets
 
-  sqlserver-init:
-    image: dreitier/mssql-init-db-env:latest
-    depends_on: 
-      sqlserver:
-        condition: service_healthy
-    environment:
-      DATABASE_HOST: sqlserver
-      MASTER_LOGIN: sa
-      MASTER_PASSWORD: ${SAPASSWORD}
-      DATABASE_LOGIN: ${DBUSER}
-      DATABASE_PASSWORD: ${DBPASSWORD}
-      DATABASE_NAME: ${DBNAME}
-      TRUST_SERVER_CERTIFICATE: 1
-
 networks:
   default:
     driver: bridge
