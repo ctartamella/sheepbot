@@ -92,7 +92,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - name: Deploy Dev
         uses: ./.github/actions/deploy
         with:
@@ -106,6 +106,7 @@ jobs:
     runs-on: [self-hosted, dev]
     environment: PROD
     if: contains(github.ref_name, 'main')
+    needs: [ build-app, build-db ]
 
     steps:  
       - name: Checkout

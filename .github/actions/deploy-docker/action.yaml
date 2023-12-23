@@ -1,18 +1,19 @@
-name: 'Deploy Docker app'
-description: 'Deploy the application's Docker Compose file'
+name: Deploy Docker app
+description: Deploy the application's Docker Compose file
 
 inputs:
   docker-user:
-    description: "Docker username"
+    description: Docker username
     required: true
   docker-password:
-    description: "Docker password"
+    description: Docker password
     required: true
   image-name:
-    description: "Complete image name to pull including version"
+    description: Complete image name to pull including version
     required: true
+    
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Download Compose file
       uses: actions/download-artifact@v4

@@ -1,32 +1,28 @@
-name: 'Deploy Docker app'
-description: 'Deploy the application's Docker Compose file'
-
+name: Deploy Docker app
+description: Deploy the application's Docker Compose file
 inputs:
   environment:
-    description: "Enviornment name"
+    description: Environment name
     required: true
     default: DEV
   secrets:
-    description: "Secrets File"
+    description: Secrets File
     required: true
   docker-user:
-    description: "The username to use for Docker Hub"
+    description: The username to use for Docker Hub
     required: true
   docker-password:
-    description: "The password used for Docker Hub"
+    description: The password used for Docker Hub
     required: true
   discord-webhook:
-    description: "The webhook used for Discord notifications"
+    description: The webhook used for Discord notifications
     required: true
-
 runs:
-  using: "composite"
+  using: composite
   steps:
- 
     - name: Retrieve Version
       uses: ./.github/actions/retrieve-version
       id: version
-
     - name: Populate Environment
       shell: bash
       run: |
@@ -35,22 +31,19 @@ runs:
         echo "${{ inputs.secrets }}" >> .env
         echo "VERSION=${{ steps.version.outputs.version }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
-      
     - name: Deploy Database
       uses: ./.github/actions/deploy-database
       with:
-        connection-string:
-
+        connection-string: null
     - name: Deploy Docker
       uses: ./.github/actions/deploy-docker
       with:
         image-name: ctartamella/sheepbot:${{ steps.version.outputs.version }}
         docker-user: ${{ inputs.docker-user }}
         docker-password: ${{ inputs.docker-password }}
-
     - name: Notify Discord
       uses: Ilshidur/action-discord@master
       env:
         DISCORD_WEBHOOK: ${{ inputs.discord-webhook }}
       with:
-        args: '${{ inputs.environment }} deployment complete.'
+        args: ${{ inputs.environment }} deployment complete.
