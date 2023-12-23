@@ -8,6 +8,23 @@ on:
   workflow_dispatch: 
 
 jobs:
+  compute-version:
+    name: Compute Version
+    runs-on: [self-hosted, build]
+    steps:
+      - name: Application Version
+        id: version
+        uses: paulhatch/semantic-version@v5.3.0
+        with:
+          version_format: "${major}.${minor}.${patch}-pre${increment}"
+
+      - name: Store version
+        run: echo ${{ steps.version.outputs.version }} >> version
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: version
+          path: version
 
   build-db:
     name: Build Database
@@ -23,7 +40,7 @@ jobs:
         run: msbuild /p:TargetFrameworkVersion=v4.7.2 ${{ github.workspace }}/database/database.sqlproj
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v4
         with:
           name: dacpac
           path: ${{ github.workspace }}/database/bin/Debug/
@@ -34,17 +51,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
-      - name: Application Version
-        id: version
-        uses: paulhatch/semantic-version@v5.3.0
-        with:
-         debug: true
-         version_format: "${major}.${minor}.${patch}-pre${increment}"
-  
+
+      - uses: .github/workflows/actions/retrieve-version.yml
+        name: Retrieve Version
+
       - name: Build and Push
         uses:  mr-smithers-excellent/docker-build-push@v6.2
         with:
@@ -55,38 +68,45 @@ jobs:
           registry: docker.io
           tags: ${{ steps.version.outputs.version }}
           buildArgs: BUILD_MODE=Release
-      
-      - name: Store version
-        run: echo ${{ steps.version.outputs.version }} >> version
-      
-      - uses: actions/upload-artifact@v4
+    
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: version
-          path: version
+          name: docker
+          path: docker-compose.yaml
 
   deploy-dev:
     name: Deploy Dev
     runs-on: [self-hosted, dev]
     environment: DEV
     needs: [ build-app, build-db ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    steps:      
+      - uses: .github/workflows/actions/retrieve-version.yml
+        name: Retrieve Version
 
       - uses: actions/download-artifact@v4
         with:
-          name: version
+          name: dacpac
+      
+      - uses: actions/download-artifact@v4
+        with:
+          name: docker
 
       - name: Populate Environment
         run: |
-          echo "VERSION=$(cat version)" >> $GITHUB_ENV
           rm .env
           touch .env
           echo "${{ secrets.ENV_FILE }}" >> .env
-          echo "VERSION=$(cat version)" >> .env
+          echo "VERSION=${{ env.VERSION }}" >> .env
           echo "ENVIRONMENT=dev" >> .env
+
+      - name: Deploy Database Schema
+        uses: azure/sql-action@v2.2.1
+        with:
+          connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+          path: './dacpac/database.dacpac'
+          action: 'publish'
+          arguments: '/p:DropObjectsNotInSource=true'  
 
       - name: Docker Pull
         run: |
@@ -94,11 +114,11 @@ jobs:
           docker pull ctartamella/sheepbot:${{ env.VERSION }}
 
       - name: Docker Up
-        run: docker-compose --env-file .env -f docker-compose.yaml up -d
+        run: docker-compose --env-file .env -f ./docker/docker-compose.yaml up -d
 
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
+          args: 'Dev deployment complete.'
