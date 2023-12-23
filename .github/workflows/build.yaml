@@ -84,6 +84,7 @@ jobs:
     name: Deploy Dev
     runs-on: [self-hosted, dev]
     environment: DEV
+    if: contains(github.ref_name, 'dev')
     needs: [ build-app, build-db ]
     
     steps:  
@@ -99,7 +100,7 @@ jobs:
     name: Deploy Prod
     runs-on: [self-hosted, dev]
     environment: PROD
-    needs: [ deploy-dev ]
+    if: contains(github.ref_name, 'main')
 
     steps:  
       - name: Checkout
