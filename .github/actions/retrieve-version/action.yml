@@ -8,4 +8,5 @@ runs:
         name: version
       
     - name: Read Version
+      shell: bash
       run: echo "VERSION=$(cat version)" >> $GITHUB_ENV
