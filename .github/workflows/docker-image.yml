@@ -29,6 +29,7 @@ jobs:
   build-db:
     name: Build Database
     runs-on: windows-latest
+    needs: [ compute-version ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,25 +49,25 @@ jobs:
   build-app:
     name: Build App
     runs-on: [ self-hosted, build]
-
+    needs: [ compute-version ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: .github/workflows/actions/retrieve-version.yml
-        name: Retrieve Version
-
+      - name: Retrieve Version
+        uses: ./.github/workflows/actions/retrieve-version
+        
       - name: Build and Push
         uses:  mr-smithers-excellent/docker-build-push@v6.2
         with:
-          image: "ctartamella/sheepbot"
+          image: "${{ var.IMAGE_NAME }}"
           dockerfile: "./src/SheepBot/Dockerfile"
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.io
-          tags: ${{ steps.version.outputs.version }}
+          tags: ${{ env.VERSION }}
           buildArgs: BUILD_MODE=Release
     
       - name: Upload Artifact
@@ -81,14 +82,16 @@ jobs:
     environment: DEV
     needs: [ build-app, build-db ]
     steps:      
-      - uses: ./.github/workflows/actions/retrieve-version
-        name: Retrieve Version
-
-      - uses: actions/download-artifact@v4
+      - name: Retrieve Version
+        uses: ./.github/workflows/actions/retrieve-version
+        
+      - name: Download DACPAC
+        uses: actions/download-artifact@v4
         with:
           name: dacpac
       
-      - uses: actions/download-artifact@v4
+      - name: Donload Compose file
+        uses: actions/download-artifact@v4
         with:
           name: docker
 
@@ -111,14 +114,14 @@ jobs:
       - name: Docker Pull
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
-          docker pull ctartamella/sheepbot:${{ env.VERSION }}
+          docker pull ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
 
       - name: Docker Up
         run: docker-compose --env-file .env -f ./docker/docker-compose.yaml up -d
 
-      - name: Discord notification
+      - name: Notify Discord
+        uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@master
         with:
           args: 'Dev deployment complete.'
