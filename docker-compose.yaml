@@ -52,6 +52,11 @@ services:
       DATABASE_NAME: ${DBNAME}
       TRUST_SERVER_CERTIFICATE: 1
 
+networks:
+  default:
+    driver: bridge
+  global_dev_deploy:
+    external: true
 volumes:
   sql_data:
   sql_logs:

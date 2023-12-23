@@ -5,9 +5,7 @@ inputs:
     description: Environment name
     required: true
     default: DEV
-  app-connection-string:
-    required: true
-  deploy-connection-string:
+  connection-string:
     required: true
   image-name:
     required: true
@@ -50,7 +48,7 @@ runs:
         touch .env
         echo "VERSION=${{ steps.version.outputs.version }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
-        echo "CONNECTION=${{ inputs.app-connection-string}}" >> .env
+        echo "CONNECTION=${{ inputs.connection-string}}" >> .env
         echo "IRACINGEMAIL=${{ inputs.iracing-email }}" >> .env
         echo "IRACINGPASSWORD=${{ inputs.iracing-password }}" >> .env
         echo "DISCORDTOKEN=${{ inputs.discord-token }}" >> .env
@@ -63,7 +61,7 @@ runs:
     - name: Deploy Database
       uses: ./.github/actions/deploy-database
       with:
-        connection-string: ${{ inputs.deploy-connection-string }}
+        connection-string: ${{ inputs.connection-string }}
 
     - name: Deploy Docker
       uses: ./.github/actions/deploy-docker
