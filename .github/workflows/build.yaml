@@ -96,8 +96,7 @@ jobs:
       - name: Deploy Dev
         uses: ./.github/actions/deploy
         with:
-          app-connection-string: Server=sqlserver;Database=sheepbot;User=sheepbot;Password=${{ secrets.DBPASSWORD }};TrustServerCertificate=true
-          deploy-connection-string: Server=${{ vars.DACPAC_HOST }};Database=sheepbot;User=sheepbot;Password=${{ secrets.DBPASSWORD }};TrustServerCertificate=true
+          connection-string: Server=sqlserver;Database=sheepbot;User=sheepbot;Password=${{ secrets.DBPASSWORD }};TrustServerCertificate=true
           iracing-email: ${{ vars.IRACINGEMAIL }}
           iracing-password: ${{ secrets.IRACINGPASSWORD }}
           db-host: sqlserver
