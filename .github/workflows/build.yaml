@@ -48,12 +48,13 @@ jobs:
           name: dacpac
           path: ${{ github.workspace }}/database/bin/Debug/
       
-      - name: 'Cleanup folder'
-        run: |
-          ls -la ./
-          rm -rf ./* || true
-          rm -rf ./.??* || true
-          ls -la ./
+      # TODO: Convert to posh
+      # - name: 'Cleanup folder'
+      #   run: |
+      #     ls -la ./
+      #     rm -rf ./* || true
+      #     rm -rf ./.??* || true
+      #     ls -la ./
 
   build-app:
     name: Build App
