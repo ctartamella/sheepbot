@@ -44,7 +44,7 @@ runs:
       run: |
         rm -f .env
         touch .env
-        echo "VERSION=${{ steps.version.outputs.version }}" >> .env
+        echo "VERSION=${{ inputs.version }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
         echo "CONNECTION=${{ inputs.connection-string}}" >> .env
         echo "IRACINGEMAIL=${{ inputs.iracing-email }}" >> .env
