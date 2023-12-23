@@ -81,7 +81,7 @@ jobs:
     environment: DEV
     needs: [ build-app, build-db ]
     steps:      
-      - uses: .github/workflows/actions/retrieve-version.yml
+      - uses: ./.github/workflows/actions/retrieve-version
         name: Retrieve Version
 
       - uses: actions/download-artifact@v4
