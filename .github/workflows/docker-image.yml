@@ -59,7 +59,7 @@ jobs:
       - name: Store version
         run: echo ${{ steps.version.outputs.version }} >> version
       
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: version
           path: version
@@ -71,11 +71,11 @@ jobs:
     needs: [ build-app, build-db ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: version
 

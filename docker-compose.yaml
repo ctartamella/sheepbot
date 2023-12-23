@@ -42,7 +42,7 @@ services:
   sqlserver-init:
     image: dreitier/mssql-init-db-env:latest
     depends_on: 
-      - sqlserver
+      sqlserver:
         condition: service_healthy
     environment:
       DATABASE_HOST: sqlserver
