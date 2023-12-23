@@ -7,6 +7,8 @@ inputs:
     default: DEV
   connection-string:
     required: true
+  image-name:
+    required: true
   discord-token:
     required: true
   iracing-email:
@@ -64,7 +66,7 @@ runs:
     - name: Deploy Docker
       uses: ./.github/actions/deploy-docker
       with:
-        image-name: ctartamella/sheepbot:${{ steps.version.outputs.version }}
+        image-name: ${{ inputs.image-name }}:${{ steps.version.outputs.version }}
         docker-user: ${{ inputs.docker-user }}
         docker-password: ${{ inputs.docker-password }}
 
