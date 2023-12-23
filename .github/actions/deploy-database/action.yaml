@@ -17,10 +17,11 @@ runs:
         path: ${{ inputs.path }}
         name: dacpac
 
-    - name: Deploy Database Schema
-      uses: azure/sql-action@v2.2.1
+    - name: Install SQL tools
+      uses: potatoqualitee/mssqlsuite@v1.7
       with:
-        connection-string: ${{ inputs.connection-string }}
-        path: ${{ inputs.path }}/database.dacpac
-        action: publish
-        arguments: /p:DropObjectsNotInSource=true
+        install: sqlpackage
+
+    - name: Deploy DACPAC
+      shell: bash
+      run: sqlpackage /Action:Publish /TargetConnectionString:${{ inputs.connection-string}} /SourceFile:${{ inputs.path }}/database.dacpac /p:DropObjectsNotInSource=true
