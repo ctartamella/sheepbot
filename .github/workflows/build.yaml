@@ -16,7 +16,7 @@ jobs:
         id: version
         uses: zwaldowski/semver-release-action@v3
         with:
-          bump: minor
+          bump: patch
           github_token: ${{ github.token }}
 
       - name: Store version
