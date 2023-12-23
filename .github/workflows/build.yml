@@ -62,13 +62,14 @@ jobs:
       - name: Build and Push
         uses:  mr-smithers-excellent/docker-build-push@v6.2
         with:
-          image: "${{ env.IMAGE_NAME }}"
+          image: "${{ vars.IMAGE_NAME }}"
           dockerfile: "./src/SheepBot/Dockerfile"
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.io
           tags: ${{ env.VERSION }}
           buildArgs: BUILD_MODE=Release
+          enableBuildKit: true
     
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -120,7 +121,7 @@ jobs:
       - name: Docker Pull
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
-          docker pull ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          docker pull ${{ vars.IMAGE_NAME }}:${{ env.VERSION }}
 
       - name: Docker Up
         run: docker-compose --env-file .env -f ./docker/docker-compose.yaml up -d
