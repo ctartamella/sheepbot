@@ -62,7 +62,7 @@ jobs:
       - name: Build and Push
         uses:  mr-smithers-excellent/docker-build-push@v6.2
         with:
-          image: "${{ var.IMAGE_NAME }}"
+          image: "${{ env.IMAGE_NAME }}"
           dockerfile: "./src/SheepBot/Dockerfile"
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
