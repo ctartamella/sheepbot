@@ -57,6 +57,7 @@ jobs:
           fetch-depth: 0
 
       - name: Retrieve Version
+        id: version
         uses: ./.github/actions/retrieve-version
         
       - name: Build and Push
@@ -67,7 +68,7 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.io
-          tags: ${{ env.VERSION }}
+          tags: ${{ steps.version.outputs.version }}
           buildArgs: BUILD_MODE=Release
           enableBuildKit: true
     
@@ -91,6 +92,7 @@ jobs:
 
       - name: Retrieve Version
         uses: ./.github/actions/retrieve-version
+        id: version
         
       - name: Download DACPAC
         uses: actions/download-artifact@v4
@@ -107,7 +109,7 @@ jobs:
           rm .env
           touch .env
           echo "${{ secrets.ENV_FILE }}" >> .env
-          echo "VERSION=${{ env.VERSION }}" >> .env
+          echo "VERSION=${{ steps.version.outputs.version }}" >> .env
           echo "ENVIRONMENT=dev" >> .env
 
       - name: Deploy Database Schema
