@@ -18,6 +18,6 @@ runs:
       uses: azure/sql-action@v2.2.1
       with:
         connection-string: ${{ inputs.connection-string }}
-        path: ./dacpac/database.dacpac
+        path: database.dacpac
         action: publish
         arguments: /p:DropObjectsNotInSource=true

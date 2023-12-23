@@ -43,11 +43,13 @@ runs:
 
     - name: Deploy Database
       uses: ./.github/actions/deploy-database
+      working-directory: ./deployment/database
       with:
         connection-string: ${{ inputs.connection-string }}
 
     - name: Deploy Docker
-      uses: ./.github/actions/deploy-docker
+      uses: ./.github/actions/deploy-app
+      working-directory: ./deployment/app
       with:
         image-name: ${{ inputs.image-name }}:${{ steps.version.outputs.version }}
         docker-user: ${{ inputs.docker-user }}
