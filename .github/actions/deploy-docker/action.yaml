@@ -11,10 +11,49 @@ inputs:
   image-name:
     description: Complete image name to pull including version
     required: true
+  version:
+    required: true
+  environment:
+    required: true
+  connection-string:
+    required: true
+  iracing-email:
+    required: true
+  iracing-password:
+    required: true
+  discord-token:
+    required: true
+  db-host:
+    required: true
+  db-user:
+    required: true
+  db-name:
+    required: true
+  db-password:
+    required: true
+  sa-password:
+    required: true
     
 runs:
   using: composite
   steps:
+    - name: Populate Environment
+      shell: bash
+      run: |
+        rm .env
+        touch .env
+        echo "VERSION=${{ steps.version.outputs.version }}" >> .env
+        echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
+        echo "CONNECTION=${{ inputs.connection-string}}" >> .env
+        echo "IRACINGEMAIL=${{ inputs.iracing-email }}" >> .env
+        echo "IRACINGPASSWORD=${{ inputs.iracing-password }}" >> .env
+        echo "DISCORDTOKEN=${{ inputs.discord-token }}" >> .env
+        echo "DBHOST=${{ inputs.db-host }}" >> .env
+        echo "DBUSER=${{ inputs.db-user }}" >> .env
+        echo "DBNAME=${{ inputs.db-name }}" >> .env
+        echo "DBPASSWORD=${{ inputs.db-password }}" >> .env
+        echo "SAPASSWORD=${{ inputs.sa-password }}" >> .env
+        
     - name: Download Compose file
       uses: actions/download-artifact@v4
       with:
