@@ -22,11 +22,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0    
-
+ 
     - name: Retrieve Version
       uses: ./.github/actions/retrieve-version
       id: version

@@ -88,6 +88,11 @@ jobs:
     needs: [ build-app, build-db ]
     
     steps:  
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
       - name: Deploy Dev
         uses: ./.github/actions/deploy
         with:
