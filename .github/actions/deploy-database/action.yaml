@@ -5,19 +5,22 @@ inputs:
   connection-string:
     description: Connection string for the database
     required: true
-  
+  path:
+    required: true
+    
 runs:
   using: composite
   steps:
     - name: Download DACPAC
       uses: actions/download-artifact@v4
       with:
+        path: ${{ inputs.path }}
         name: dacpac
 
     - name: Deploy Database Schema
       uses: azure/sql-action@v2.2.1
       with:
         connection-string: ${{ inputs.connection-string }}
-        path: database.dacpac
+        path: ${{ inputs.path }}/database.dacpac
         action: publish
         arguments: /p:DropObjectsNotInSource=true
