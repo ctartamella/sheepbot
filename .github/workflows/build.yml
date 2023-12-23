@@ -57,7 +57,7 @@ jobs:
           fetch-depth: 0
 
       - name: Retrieve Version
-        uses: ./.github/workflows/actions/retrieve-version
+        uses: ./.github/actions/retrieve-version
         
       - name: Build and Push
         uses:  mr-smithers-excellent/docker-build-push@v6.2
@@ -82,9 +82,14 @@ jobs:
     environment: DEV
     needs: [ build-app, build-db ]
     
-    steps:      
+    steps:  
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    
+
       - name: Retrieve Version
-        uses: ./.github/workflows/actions/retrieve-version
+        uses: ./.github/actions/retrieve-version
         
       - name: Download DACPAC
         uses: actions/download-artifact@v4
