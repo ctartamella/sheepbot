@@ -23,13 +23,13 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     user: root
     environment:
-      - SA_PASSWORD=${DbPassword}
+      - SA_PASSWORD=${SaPassword}
       - ACCEPT_EULA=Y
       - MSSQL_PID=Developer
     ports:
       - "5434:1433"
     healthcheck:
-      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${DbPassword} -Q "SELECT 1" -b -o /dev/null
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${SaPassword} -Q "SELECT 1" -b -o /dev/null
       interval: 10s
       timeout: 3s
       retries: 10
@@ -43,13 +43,14 @@ services:
     image: dreitier/mssql-init-db-env:latest
     depends_on: 
       - sqlserver
+        condition: service_healthy
     environment:
       DATABASE_HOST: sqlserver
-      MASTER_LOGIN: ${DbUser}
-      MASTER_PASSWORD: ${DbPassword}
-      DATABASE_NAME: ${DbName}
+      MASTER_LOGIN: sa
+      MASTER_PASSWORD: ${SaPassword}
       DATABASE_LOGIN: ${DbUser}
       DATABASE_PASSWORD: ${DbPassword}
+      DATABASE_NAME: ${DbName}
       TRUST_SERVER_CERTIFICATE: 1
 
 volumes:
