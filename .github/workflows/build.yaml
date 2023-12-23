@@ -87,52 +87,22 @@ jobs:
     needs: [ build-app, build-db ]
     
     steps:  
+      - name: Deploy Dev
+        uses: ./.github/actions/deploy
+        with:
+          docker-user: ${{ secrets.DOCKER_USER }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
+          discord-webhook: ${{ secrets. DISCORD_WEBHOOK }}
+          secrets: ${{ secrets.ENV_FILE }}
+
+  deploy-prod:
+    name: Deploy Prod
+    runs-on: [self-hosted, dev]
+    environment: PROD
+    needs: [ deploy-dev ]
+
+    steps:  
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0    
-
-      - name: Retrieve Version
-        uses: ./.github/actions/retrieve-version
-        id: version
-        
-      - name: Download DACPAC
-        uses: actions/download-artifact@v4
-        with:
-          name: dacpac
-      
-      - name: Donload Compose file
-        uses: actions/download-artifact@v4
-        with:
-          name: docker
-
-      - name: Populate Environment
-        run: |
-          rm .env
-          touch .env
-          echo "${{ secrets.ENV_FILE }}" >> .env
-          echo "VERSION=${{ steps.version.outputs.version }}" >> .env
-          echo "ENVIRONMENT=dev" >> .env
-
-      - name: Deploy Database Schema
-        uses: azure/sql-action@v2.2.1
-        with:
-          connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
-          path: './dacpac/database.dacpac'
-          action: 'publish'
-          arguments: '/p:DropObjectsNotInSource=true'  
-
-      - name: Docker Pull
-        run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
-          docker pull ${{ vars.IMAGE_NAME }}:${{ env.VERSION }}
-
-      - name: Docker Up
-        run: docker-compose --env-file .env -f ./docker/docker-compose.yaml up -d
-
-      - name: Notify Discord
-        uses: Ilshidur/action-discord@master
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        with:
-          args: 'Dev deployment complete.'
+          fetch-depth: 0

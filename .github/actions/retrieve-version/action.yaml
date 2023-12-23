@@ -1,8 +1,10 @@
 name: 'Retrieve Version'
 description: 'Fetch the version from artifacts and store it in the environment'
+
 outputs:
   version:
     value: ${{ steps.read.outputs.version }}
+    
 runs:
   using: "composite"
   steps:
