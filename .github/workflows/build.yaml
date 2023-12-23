@@ -12,11 +12,12 @@ jobs:
     name: Compute Version
     runs-on: [self-hosted, build]
     steps:
-      - name: Application Version
+      - name: Create Semantic Version
         id: version
-        uses: paulhatch/semantic-version@v5.3.0
+        uses: zwaldowski/semver-release-action@v3
         with:
-          version_format: "${major}.${minor}.${patch}-pre${increment}"
+          bump: minor
+          github_token: ${{ github.token }}
 
       - name: Store version
         run: |
