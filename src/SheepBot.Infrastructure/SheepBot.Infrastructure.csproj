@@ -11,19 +11,4 @@
     <ProjectReference Include="..\SheepBot.Domain\SheepBot.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Context\SheepContext.Custom.cs">
-      <DependentUpon>SheepContext.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Intefaces\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

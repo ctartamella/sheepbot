@@ -1,11 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using Microsoft.EntityFrameworkCore;
 using SheepBot.Domain.Base;
 using SheepBot.Domain.Enums;
 
 namespace SheepBot.Domain.Entities;
 
+[Table("track_config")]
+[Index("TrackId", Name = "Index_track_config_trackid", IsUnique = false, AllDescending = false)]
+[Index("ConfigId", Name = "Index_track_config_configid", IsUnique = true, AllDescending = false)]
 public record TrackConfig : ModelBase
 {
     [Column("track_id")]
@@ -39,6 +43,8 @@ public record TrackConfig : ModelBase
     [Column("track_type")]
     public TrackType TrackType { get; init; }
     
+    [ForeignKey("TrackId")]
+    [InverseProperty("TrackConfigs")]
     public virtual Track Track { get; set; } = null!;
     
     public static DataTable CreateDataTable(IEnumerable<TrackConfig> tracks)

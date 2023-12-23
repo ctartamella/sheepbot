@@ -1,0 +1,108 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+  workflow_dispatch: 
+
+jobs:
+  compute-version:
+    name: Compute Version
+    runs-on: [self-hosted, build]
+    steps:
+      - name: Application Version
+        id: version
+        uses: paulhatch/semantic-version@v5.3.0
+        with:
+          version_format: "${major}.${minor}.${patch}-pre${increment}"
+
+      - name: Store version
+        run: |
+          rm version
+          echo ${{ steps.version.outputs.version }} >> version
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: version
+          path: version
+
+  build-db:
+    name: Build Database
+    runs-on: windows-latest
+    needs: [ compute-version ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3.1
+      
+      - name: Build DACPAC
+        run: msbuild /p:TargetFrameworkVersion=v4.7.2 ${{ github.workspace }}/database/database.sqlproj
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dacpac
+          path: ${{ github.workspace }}/database/bin/Debug/
+
+  build-app:
+    name: Build App
+    runs-on: [ self-hosted, build]
+    needs: [ compute-version ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Retrieve Version
+        id: version
+        uses: ./.github/actions/retrieve-version
+        
+      - name: Build and Push
+        uses:  mr-smithers-excellent/docker-build-push@v6.2
+        with:
+          image: "${{ vars.IMAGE_NAME }}"
+          dockerfile: "./src/SheepBot/Dockerfile"
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: docker.io
+          tags: ${{ steps.version.outputs.version }}
+          buildArgs: BUILD_MODE=Release
+          enableBuildKit: true
+    
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker
+          path: docker-compose.yaml
+
+  deploy-dev:
+    name: Deploy Dev
+    runs-on: [self-hosted, dev]
+    environment: DEV
+    needs: [ build-app, build-db ]
+    
+    steps:  
+      - name: Deploy Dev
+        uses: ./.github/actions/deploy
+        with:
+          docker-user: ${{ secrets.DOCKER_USER }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
+          discord-webhook: ${{ secrets. DISCORD_WEBHOOK }}
+          secrets: ${{ secrets.ENV_FILE }}
+
+  deploy-prod:
+    name: Deploy Prod
+    runs-on: [self-hosted, dev]
+    environment: PROD
+    needs: [ deploy-dev ]
+
+    steps:  
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0

@@ -1,0 +1,59 @@
+version: "3"
+services: 
+  bot:
+    build:
+      dockerfile: ./src/SheepBot/Dockerfile
+      context: .
+      args:
+        BUILD_MODE: ${BUILD_MODE:-Debug}
+    image: ctartamella/sheepbot:${VERSION}
+    container_name: sheepbot
+    depends_on:
+      - sqlserver
+    environment:
+      VERSION: ${VERSION}
+      Environment: ${ENVIRONMENT}
+      ConnectionStrings__Default: Server=${DbHost};Database=${DbName};User=${DbUser};Password=${DbPassword};TrustServerCertificate=true
+      iRacing__Email: ${IracingEmail}
+      iRacing__Password: ${IracingPassword}
+      Discord__GuildId: ${DiscordGuild}
+      Discord__Token: ${DiscordToken}
+    
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    environment:
+      - SA_PASSWORD=${SaPassword}
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
+    ports:
+      - "5434:1433"
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${SaPassword} -Q "SELECT 1" -b -o /dev/null
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - sql_data:/var/opt/mssql/data 
+      - sql_logs:/var/opt/mssql/log
+      - sql_secrets:/var/opt/mssql/secrets
+
+  sqlserver-init:
+    image: dreitier/mssql-init-db-env:latest
+    depends_on: 
+      sqlserver:
+        condition: service_healthy
+    environment:
+      DATABASE_HOST: sqlserver
+      MASTER_LOGIN: sa
+      MASTER_PASSWORD: ${SaPassword}
+      DATABASE_LOGIN: ${DbUser}
+      DATABASE_PASSWORD: ${DbPassword}
+      DATABASE_NAME: ${DbName}
+      TRUST_SERVER_CERTIFICATE: 1
+
+volumes:
+  sql_data:
+  sql_logs:
+  sql_secrets:

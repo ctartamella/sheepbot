@@ -20,7 +20,7 @@ public class MappingProfile : Profile
         });
         
         CreateMap<iRacing.Client.Models.iRacingTrack, Domain.Entities.Track>()
-            .ForMember(t => t.IracingId, x => x.MapFrom(t => t.TrackId))
+            .ForMember(t => t.TrackId, x => x.MapFrom(t => t.TrackId))
             .ForMember(t => t.Name, x => x.MapFrom(t => t.TrackName))
             .ForMember(t => t.IsFree, x => x.MapFrom(t => t.FreeWithSubscription))
             .ForMember(t => t.IsLegacy, x => x.MapFrom(t => t.TrackName.Contains("LEGACY", StringComparison.InvariantCulture)))

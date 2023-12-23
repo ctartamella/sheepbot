@@ -1,0 +1,20 @@
+name: 'Retrieve Version'
+description: 'Fetch the version from artifacts and store it in the environment'
+
+outputs:
+  version:
+    value: ${{ steps.read.outputs.version }}
+    
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: version
+      
+    - name: Read Version
+      id: read
+      shell: bash
+      run: |
+        cat version
+        echo "version=$(cat version)" >> $GITHUB_OUTPUT

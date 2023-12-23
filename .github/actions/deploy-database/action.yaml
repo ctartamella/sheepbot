@@ -1,0 +1,23 @@
+name: 'Deploy Database'
+description: 'Deploy the project DACPAC to the specified connection string'
+
+inputs:
+  connection-string:
+    description: "Connection string for the database"
+    required: true
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Download DACPAC
+        uses: actions/download-artifact@v4
+        with:
+          name: dacpac
+
+    - name: Deploy Database Schema
+        uses: azure/sql-action@v2.2.1
+        with:
+          connection-string: ${{ inputs.connection-string }}
+          path: './dacpac/database.dacpac'
+          action: 'publish'
+          arguments: '/p:DropObjectsNotInSource=true'  

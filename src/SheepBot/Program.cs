@@ -1,24 +1,32 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Discord.Interactions;
+using Discord.WebSocket;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SheepBot.Application.Helpers;
 using SheepBot.Infrastructure.Helpers;
+using SheepBot.iRacing.Client.Helpers;
 using SheepBot.Models;
 using SheepBot.Workers;
 
-var configurationRoot = new ConfigurationBuilder()
+// ReSharper disable StringLiteralTypo
+
+var environment = Environment.GetEnvironmentVariable("Environment");
+var configurationBuilder = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", false, true)
-    .AddUserSecrets(typeof(Program).Assembly)
-    .Build();
+    .AddEnvironmentVariables();
 
-var config = configurationRoot.Get<Config>();
-
-if (config is null)
+if (!string.IsNullOrWhiteSpace(environment))
 {
-    throw new InvalidDataException("Can not parse configuration. Exiting.");
+    configurationBuilder.AddUserSecrets<Program>();
 }
 
+var configurationRoot = configurationBuilder.Build();
+
+// ReSharper restore StringLiteralTypo
+
+var config = Config.GetFrom(configurationRoot);
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureLogging(builder => builder.AddConsole())
     .ConfigureServices(services =>
@@ -26,10 +34,21 @@ var host = Host.CreateDefaultBuilder(args)
         var connectionString = configurationRoot.GetConnectionString("Default") ?? throw new InvalidDataException();
 
         services
-            //.AddIRacingClient(config.IracingUrl, config.IracingEmail, config.IracingPassword)
+            .AddSingleton(config.Discord)
+            .AddSingleton(config.iRacing)
+            .AddSingleton(new InteractionServiceConfig
+            {
+                DefaultRunMode = RunMode.Async,
+                InteractionCustomIdDelimiters = new[] { ';' }
+            })
+            .AddIRacingClient(config.iRacing)
             .AddApplication(connectionString)
-            .AddInfrastructure(connectionString)
-            .AddHostedService<BotService>(_ => new BotService(config.Discord));
+            .AddInfrastructure()
+            .AddSingleton<DiscordSocketClient>()
+            .AddSingleton<InteractionService>()
+            //.AddHostedService<TrackWorker>()
+            .AddHostedService<InteractionHandlingService>()
+            .AddHostedService<BotService>();
     })
     .Build();
 

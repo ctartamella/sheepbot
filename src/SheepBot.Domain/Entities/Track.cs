@@ -12,8 +12,8 @@ namespace SheepBot.Domain.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public record Track : ModelBase
 {
-    [Column("iracing_id")]
-    public int IracingId { get; init; }
+    [Column("track_id")]
+    public int TrackId { get; init; }
 
     [Column("name")]
     [StringLength(50)]
@@ -51,6 +51,7 @@ public record Track : ModelBase
     [InverseProperty("Track")]
     public virtual ICollection<Race> Races { get; set; } = new List<Race>();
 
+    [InverseProperty("Track")]
     public virtual ICollection<TrackConfig> TrackConfigs { get; set; } = new List<TrackConfig>();
     
     public static DataTable CreateDataTable(IEnumerable<Track> tracks)
@@ -71,7 +72,7 @@ public record Track : ModelBase
         foreach (var track in tracks)
         {
             table.Rows.Add(
-                track.IracingId,
+                track.TrackId,
                 track.Name,
                 track.IsFree,
                 track.IsLegacy,
