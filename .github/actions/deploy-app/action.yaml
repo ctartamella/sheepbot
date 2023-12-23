@@ -73,4 +73,4 @@ runs:
 
     - name: Docker Up
       shell: bash
-      run: docker-compose --env-file .env -f ${{ inputs.path }}/docker-compose.yaml up -d
+      run: docker-compose --env-file ${{ inputs.path }}/.env -f ${{ inputs.path }}/docker-compose.yaml up -d
