@@ -22,7 +22,7 @@ runs:
     
     - name: Docker Login
       shell: bash
-      run: echo ${{ inputs.docker-password }} | docker login -u ${{ inputs.docker-version }} --password-stdin
+      run: echo ${{ inputs.docker-password }} | docker login -u ${{ inputs.docker-user}} --password-stdin
 
     - name: Docker Pull
       shell: bash
