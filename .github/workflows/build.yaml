@@ -20,7 +20,7 @@ jobs:
 
       - name: Store version
         run: |
-          rm version
+          rm -f version
           echo ${{ steps.version.outputs.version }} >> version
       
       - uses: actions/upload-artifact@v4
