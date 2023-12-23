@@ -47,6 +47,13 @@ jobs:
         with:
           name: dacpac
           path: ${{ github.workspace }}/database/bin/Debug/
+      
+      - name: 'Cleanup folder'
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
 
   build-app:
     name: Build App
@@ -79,6 +86,13 @@ jobs:
         with:
           name: docker
           path: docker-compose.yaml
+    
+      - name: 'Cleanup folder'
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
 
   deploy-dev:
     name: Deploy Dev
