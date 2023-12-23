@@ -1,4 +1,4 @@
-name: Application
+name: Build
 
 on:
   push:
@@ -81,6 +81,7 @@ jobs:
     runs-on: [self-hosted, dev]
     environment: DEV
     needs: [ build-app, build-db ]
+    
     steps:      
       - name: Retrieve Version
         uses: ./.github/workflows/actions/retrieve-version

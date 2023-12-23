@@ -1,0 +1,11 @@
+name: 'Retrieve Version'
+description: 'Fetch the version from artifacts and store it in the environment'
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: version
+      
+    - name: Read Version
+      run: echo "VERSION=$(cat version)" >> $GITHUB_ENV
