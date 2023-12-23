@@ -5,10 +5,23 @@ inputs:
     description: Environment name
     required: true
     default: DEV
-  secrets:
-    description: Secrets File
-    required: true
   connection-string:
+    required: true
+  discord-token:
+    required: true
+  iracing-email:
+    required: true
+  iracing-password:
+    required: true
+  db-host:
+    required: true
+  db-user:
+    required: true
+  db-name:
+    required: true
+  db-password:
+    required: true
+  sa-password:
     required: true
   docker-user:
     description: The username to use for Docker Hub
@@ -25,15 +38,23 @@ runs:
     - name: Retrieve Version
       uses: ./.github/actions/retrieve-version
       id: version
-      
+
     - name: Populate Environment
       shell: bash
       run: |
         rm .env
         touch .env
-        echo "${{ inputs.secrets }}" >> .env
         echo "VERSION=${{ steps.version.outputs.version }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
+        echo "CONNECTION=${{ inputs.connection-string}}" >> .env
+        echo "IRACINGEMAIL=${{ inputs.iracing-email }}" >> .env
+        echo "IRACINGPASSWORD=${{ inputs.iracing-password }}" >> .env
+        echo "DISCORDTOKEN=${{ inputs.discord-token }}" >> .env
+        echo "DBHOST=${{ inputs.db-host }}" >> .env
+        echo "DBUSER=${{ inputs.db-user }}" >> .env
+        echo "DBNAME=${{ inputs.db-name }}" >> .env
+        echo "DBPASSWORD=${{ inputs.db-password }}" >> .env
+        echo "SAPASSWORD=${{ inputs.sa-password }}" >> .env
 
     - name: Deploy Database
       uses: ./.github/actions/deploy-database

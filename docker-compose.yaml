@@ -13,23 +13,22 @@ services:
     environment:
       VERSION: ${VERSION}
       Environment: ${ENVIRONMENT}
-      ConnectionStrings__Default: Server=${DbHost};Database=${DbName};User=${DbUser};Password=${DbPassword};TrustServerCertificate=true
-      iRacing__Email: ${IracingEmail}
-      iRacing__Password: ${IracingPassword}
-      Discord__GuildId: ${DiscordGuild}
-      Discord__Token: ${DiscordToken}
+      ConnectionStrings__Default: ${CONNECTION}
+      iRacing__Email: ${IRACINGEMAIL}
+      iRacing__Password: ${IRACINGPASSWORD}
+      Discord__Token: ${DISCORDTOKEN}
     
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     user: root
     environment:
-      - SA_PASSWORD=${SaPassword}
+      - SA_PASSWORD=${SAPASSWORD}
       - ACCEPT_EULA=Y
       - MSSQL_PID=Developer
     ports:
       - "5434:1433"
     healthcheck:
-      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${SaPassword} -Q "SELECT 1" -b -o /dev/null
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${SAPASSWORD} -Q "SELECT 1" -b -o /dev/null
       interval: 10s
       timeout: 3s
       retries: 10
@@ -47,10 +46,10 @@ services:
     environment:
       DATABASE_HOST: sqlserver
       MASTER_LOGIN: sa
-      MASTER_PASSWORD: ${SaPassword}
-      DATABASE_LOGIN: ${DbUser}
-      DATABASE_PASSWORD: ${DbPassword}
-      DATABASE_NAME: ${DbName}
+      MASTER_PASSWORD: ${SAPASSWORD}
+      DATABASE_LOGIN: ${DBUSER}
+      DATABASE_PASSWORD: ${DBPASSWORD}
+      DATABASE_NAME: ${DBNAME}
       TRUST_SERVER_CERTIFICATE: 1
 
 volumes:
