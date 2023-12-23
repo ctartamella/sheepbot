@@ -1,23 +1,44 @@
-name: 'Deploy Database'
-description: 'Deploy the project DACPAC to the specified connection string'
+name: Deploy Database
+description: Deploy the project DACPAC to the specified connection string
 
 inputs:
   connection-string:
-    description: "Connection string for the database"
+    description: Connection string for the database
     required: true
-  
+  sa-password:
+    required: true
+  db-name:
+    required: true
+  db-host:
+    required: true
+  path:
+    required: true
+    
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Download DACPAC
-        uses: actions/download-artifact@v4
-        with:
-          name: dacpac
+      uses: actions/download-artifact@v4
+      with:
+        path: ${{ inputs.path }}
+        name: dacpac
 
-    - name: Deploy Database Schema
-        uses: azure/sql-action@v2.2.1
-        with:
-          connection-string: ${{ inputs.connection-string }}
-          path: './dacpac/database.dacpac'
-          action: 'publish'
-          arguments: '/p:DropObjectsNotInSource=true'  
+    - name: Install SQL tools
+      uses: potatoqualitee/mssqlsuite@v1.7
+      with:
+        install: sqlclient, sqlpackage
+
+    - name: Create DB
+      shell: bash
+      run: |
+        SQL=$(cat <<-EOF
+            IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${{ inputs.db-name }}')
+            BEGIN
+              CREATE DATABASE ${{ inputs.db-name }}
+            END
+        EOF
+        sqlcmd -S ${{ inputs.db-host }} -U sa -P ${{ inputs.sa-password }} -d tempdb -Q $SQL
+
+    - name: Deploy DACPAC
+      shell: bash
+      run: sqlpackage /Action:Publish /TargetConnectionString:${{ inputs.connection-string}} /SourceFile:${{ inputs.path }}/database.dacpac /p:DropObjectsNotInSource=true

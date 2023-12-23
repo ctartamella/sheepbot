@@ -1,0 +1,76 @@
+name: Deploy Docker app
+description: Deploy the application's Docker Compose file
+
+inputs:
+  path:
+    required: true
+  docker-user:
+    description: Docker username
+    required: true
+  docker-password:
+    description: Docker password
+    required: true
+  image-name:
+    description: Complete image name to pull including version
+    required: true
+  version:
+    required: true
+  environment:
+    required: true
+  connection-string:
+    required: true
+  iracing-email:
+    required: true
+  iracing-password:
+    required: true
+  discord-token:
+    required: true
+  db-host:
+    required: true
+  db-user:
+    required: true
+  db-name:
+    required: true
+  db-password:
+    required: true
+  sa-password:
+    required: true
+    
+runs:
+  using: composite
+  steps:
+    - name: Populate Environment
+      shell: bash
+      run: |
+        rm -f .env
+        touch .env
+        echo "VERSION=${{ steps.version.outputs.version }}" >> .env
+        echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
+        echo "CONNECTION=${{ inputs.connection-string}}" >> .env
+        echo "IRACINGEMAIL=${{ inputs.iracing-email }}" >> .env
+        echo "IRACINGPASSWORD=${{ inputs.iracing-password }}" >> .env
+        echo "DISCORDTOKEN=${{ inputs.discord-token }}" >> .env
+        echo "DBHOST=${{ inputs.db-host }}" >> .env
+        echo "DBUSER=${{ inputs.db-user }}" >> .env
+        echo "DBNAME=${{ inputs.db-name }}" >> .env
+        echo "DBPASSWORD=${{ inputs.db-password }}" >> .env
+        echo "SAPASSWORD=${{ inputs.sa-password }}" >> .env
+        mkdir --parents ${{ inputs.path }}/; mv .env $_
+        
+    - name: Download Compose file
+      uses: actions/download-artifact@v4
+      with:
+        path: ${{ inputs.path }}
+        name: docker
+    
+    - name: Docker Login
+      shell: bash
+      run: echo ${{ inputs.docker-password }} | docker login -u ${{ inputs.docker-user}} --password-stdin
+
+    - name: Docker Pull
+      shell: bash
+      run: docker pull ${{ inputs.image-name }}
+
+    - name: Docker Up
+      shell: bash
+      run: docker-compose --env-file ${{ inputs.path }}/.env -f ${{ inputs.path }}/docker-compose.yaml up -d
