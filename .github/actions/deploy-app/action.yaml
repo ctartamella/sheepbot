@@ -42,8 +42,7 @@ runs:
     - name: Populate Environment
       shell: bash
       run: |
-        cd ${{ inputs.path }}
-        rm .env
+        rm -f .env
         touch .env
         echo "VERSION=${{ steps.version.outputs.version }}" >> .env
         echo "ENVIRONMENT=${{ inputs.environment }}" >> .env
@@ -56,7 +55,7 @@ runs:
         echo "DBNAME=${{ inputs.db-name }}" >> .env
         echo "DBPASSWORD=${{ inputs.db-password }}" >> .env
         echo "SAPASSWORD=${{ inputs.sa-password }}" >> .env
-        cd ../
+        mv .env ${{ inputs.path }}/
         
     - name: Download Compose file
       uses: actions/download-artifact@v4
