@@ -58,7 +58,6 @@ runs:
       uses: ./.github/actions/deploy-database
       with:
         path: ./deployment/database
-        connection-string: ${{ inputs.connection-string }}
         db-host: ${{ inputs.db-host }}
         db-name: ${{ inputs.db-name }}
         sa-password: ${{ inputs.sa-password }}

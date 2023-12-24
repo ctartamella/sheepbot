@@ -2,9 +2,6 @@ name: Deploy Database
 description: Deploy the project DACPAC to the specified connection string
 
 inputs:
-  connection-string:
-    description: Connection string for the database
-    required: true
   sa-password:
     required: true
   db-name:
@@ -33,4 +30,4 @@ runs:
 
     - name: Deploy DACPAC
       shell: bash
-      run: sqlpackage /Action:Publish /SourceFile:${{ inputs.path }}/database.dacpac /TargetServerName:${{ inputs.db-host }} /TargetUser:sa /TargetPassword:${{ inputs.sa-password }} /TargetTrustServerCertificate:True /p:DropObjectsNotInSource=true
+      run: sqlpackage /Action:Publish /SourceFile:${{ inputs.path }}/database.dacpac /TargetServerName:${{ inputs.db-host }} /TargetUser:sa /TargetPassword:${{ inputs.sa-password }} /TargetDatabaseName:${{ inputs.db-name }} /TargetTrustServerCertificate:True /p:DropObjectsNotInSource=true
