@@ -25,10 +25,5 @@ public class Config
         ArgumentException.ThrowIfNullOrWhiteSpace(iRacing.Email);
         ArgumentException.ThrowIfNullOrWhiteSpace(iRacing.Password);
         ArgumentException.ThrowIfNullOrWhiteSpace(iRacing.BaseUri.ToString());
-        
-        if (Discord.GuildId <= 0)
-        {
-            throw new ArgumentException(nameof(Discord.GuildId));
-        }
     }
 }

@@ -40,7 +40,7 @@ runs:
     - name: Deploy Docker
       uses: ./.github/actions/deploy-app
       with:
-        path: ./deployment/app
+        path: ./deployment/sheepbot-dev
         image-name: ${{ inputs.image-name }}:${{ steps.version.outputs.version }}
         docker-user: ${{ inputs.docker-user }}
         docker-password: ${{ inputs.docker-password }}
