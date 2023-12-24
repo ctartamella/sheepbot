@@ -31,12 +31,11 @@ runs:
     - name: Create DB
       shell: bash
       run: |
-        echo '
-            IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${{ inputs.db-name }}')
-            BEGIN
-              CREATE DATABASE ${{ inputs.db-name }}
-            END' #| sqlcmd -S ${{ inputs.db-host }} -U sa -P ${{ inputs.sa-password }} -d tempdb -Q 
+        echo 'IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${{ inputs.db-name }}')
+              BEGIN
+                  CREATE DATABASE ${{ inputs.db-name }}
+              END' | sqlcmd -S ${{ inputs.db-host }} -U sa -P ${{ inputs.sa-password }} -d tempdb -Q 
 
     - name: Deploy DACPAC
       shell: bash
-      run: sqlpackage /Action:Publish /TargetConnectionString:${{ inputs.connection-string}} /SourceFile:${{ inputs.path }}/database.dacpac /p:DropObjectsNotInSource=true
+      run: sqlpackage /Action:Publish /TargetConnectionString:${{ inputs.connection-string }} /SourceFile:${{ inputs.path }}/database.dacpac /p:DropObjectsNotInSource=true
