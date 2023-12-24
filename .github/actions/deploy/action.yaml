@@ -41,17 +41,15 @@ runs:
       uses: ./.github/actions/deploy-app
       with:
         path: ./deployment/sheepbot-dev
-        image-name: ${{ inputs.image-name }}:${{ steps.version.outputs.version }}
         docker-user: ${{ inputs.docker-user }}
         docker-password: ${{ inputs.docker-password }}
+        image-name: ${{ inputs.image-name }}:${{ steps.version.outputs.version }}
+        version: ${{ steps.version.outputs.version }}        
         environment: ${{ inputs.environment }}
-        version: ${{ steps.version.outputs.version }}
         connection-string: ${{ inputs.connection-string }}
         iracing-email: ${{ inputs.iracing-email }}
         iracing-password: ${{ inputs.iracing-password }}
         discord-token: ${{ inputs.discord-token }}
-        db-host: ${{ inputs.db-host }}
-        db-name: ${{ inputs.db-name }}
         sa-password: ${{ inputs.sa-password }}
 
     - name: Deploy Database
@@ -62,9 +60,9 @@ runs:
         db-name: ${{ inputs.db-name }}
         sa-password: ${{ inputs.sa-password }}
 
-    # - name: Notify Discord
-    #   uses: Ilshidur/action-discord@master
-    #   env:
-    #     DISCORD_WEBHOOK: ${{ inputs.discord-webhook }}
-    #   with:
-    #     args: ${{ inputs.environment }} deployment complete.
+    - name: Notify Discord
+      uses: Ilshidur/action-discord@master
+      env:
+        DISCORD_WEBHOOK: ${{ inputs.discord-webhook }}
+      with:
+        args: ${{ inputs.environment }} deployment complete.

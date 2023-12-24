@@ -3,6 +3,7 @@ description: Deploy the application's Docker Compose file
 
 inputs:
   path:
+    description: Path for deployment artifacts
     required: true
   docker-user:
     description: Docker username
@@ -14,24 +15,22 @@ inputs:
     description: Complete image name to pull including version
     required: true
   version:
+    description: The tag of the image to pull
     required: true
   environment:
+    description: The environment name
     required: true
   connection-string:
+    description: The connection string to the application database
     required: true
   iracing-email:
+    description: iRacing username
     required: true
   iracing-password:
+    description: iRacing password
     required: true
   discord-token:
-    required: true
-  db-host:
-    required: true
-  db-user:
-    required: true
-  db-name:
-    required: true
-  db-password:
+    description: Discord bot token
     required: true
   sa-password:
     required: true
@@ -50,10 +49,6 @@ runs:
         echo "IRACINGEMAIL=${{ inputs.iracing-email }}" >> .env
         echo "IRACINGPASSWORD=${{ inputs.iracing-password }}" >> .env
         echo "DISCORDTOKEN=${{ inputs.discord-token }}" >> .env
-        echo "DBHOST=${{ inputs.db-host }}" >> .env
-        echo "DBUSER=${{ inputs.db-user }}" >> .env
-        echo "DBNAME=${{ inputs.db-name }}" >> .env
-        echo "DBPASSWORD=${{ inputs.db-password }}" >> .env
         echo "SAPASSWORD=${{ inputs.sa-password }}" >> .env
         mkdir --parents ${{ inputs.path }}/; mv .env $_
         
