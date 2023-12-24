@@ -27,7 +27,10 @@ inputs:
   docker-password:
     description: The password used for Docker Hub
     required: true
-  discord-webhook:
+  discord-webhook-id:
+    description: The webhook used for Discord notifications
+    required: true
+  discord-webhook-token:
     description: The webhook used for Discord notifications
     required: true
 runs:
@@ -63,6 +66,6 @@ runs:
     - name: Notify Discord
       uses: appleboy/discord-action@master
       with:
-        webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-        webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+        webhook_id: ${{ inputs.discord-webhook-id }}
+        webhook_token: ${{ inputs.discord-webhook-token }}
         args: ${{ inputs.environment }} deployment complete.

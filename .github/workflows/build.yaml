@@ -112,7 +112,8 @@ jobs:
           sa-password: ${{ secrets.SAPASSWORD }}
           docker-user: ${{ secrets.DOCKER_USER }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
-          discord-webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          discord-webhook-id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          discord-webhook-password: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           discord-token: ${{ secrets.DISCORDTOKEN }}
           image-name: ctartamella/sheepbot
 
