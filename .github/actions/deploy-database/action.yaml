@@ -33,4 +33,4 @@ runs:
 
     - name: Deploy DACPAC
       shell: bash
-      run: sqlpackage /Action:Publish /TargetConnectionString:${{ inputs.connection-string }} /SourceFile:${{ inputs.path }}/database.dacpac /p:DropObjectsNotInSource=true
+      run: sqlpackage /Action:Publish /SourceFile:${{ inputs.path }}/database.dacpac /TargetServerName:${{ inputs.db-host }} /TargetUser:sa /TargetPassword:${{ inputs.sa-password }} /TargetTrustServerCertificate:True /p:DropObjectsNotInSource=true
