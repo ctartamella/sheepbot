@@ -31,13 +31,11 @@ runs:
     - name: Create DB
       shell: bash
       run: |
-        read -d '' SQL << EOF
+        echo '
             IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${{ inputs.db-name }}')
             BEGIN
               CREATE DATABASE ${{ inputs.db-name }}
-            END
-        EOF
-        sqlcmd -S ${{ inputs.db-host }} -U sa -P ${{ inputs.sa-password }} -d tempdb -Q $SQL
+            END' #| sqlcmd -S ${{ inputs.db-host }} -U sa -P ${{ inputs.sa-password }} -d tempdb -Q 
 
     - name: Deploy DACPAC
       shell: bash
