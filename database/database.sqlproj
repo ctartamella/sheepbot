@@ -18,7 +18,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="dbo\Scripts" />
-    <Folder Include="dbo\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\track_type.sql" />
