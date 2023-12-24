@@ -61,8 +61,8 @@ runs:
         sa-password: ${{ inputs.sa-password }}
 
     - name: Notify Discord
-      uses: Ilshidur/action-discord@master
-      env:
-        DISCORD_WEBHOOK: ${{ inputs.discord-webhook }}
+      uses: appleboy/discord-action@master
       with:
+        webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+        webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
         args: ${{ inputs.environment }} deployment complete.
