@@ -1,4 +1,6 @@
-PRINT 'Populating Lookup Table [dbo].[length_unit]'
+PRINT 'Populating Lookup Table [dbo].[length_unit]';
+
+GO;
 
 MERGE INTO [dbo].[length_unit] as t
     USING (

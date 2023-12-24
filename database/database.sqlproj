@@ -12,7 +12,6 @@
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="dbo\Scripts\populate_race_length_unit.PostDeployment.sql" />
     <None Include="dbo\Scripts\populate_series_type.PostDeployment.sql" />
     <PostDeploy Include="dbo\Scripts\PostDeployment.sql" />
   </ItemGroup>
