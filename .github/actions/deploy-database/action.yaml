@@ -29,7 +29,7 @@ runs:
         echo 'IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${{ inputs.db-name }}')
               BEGIN
                   CREATE DATABASE ${{ inputs.db-name }}
-              END' | sqlcmd -E -S ${{ inputs.db-host }} -U sa -P ${{ inputs.sa-password }} -d tempdb -i /dev/stdin
+              END' | sqlcmd -C -S ${{ inputs.db-host }} -U sa -P ${{ inputs.sa-password }} -d tempdb -i /dev/stdin
 
     - name: Deploy DACPAC
       shell: bash
