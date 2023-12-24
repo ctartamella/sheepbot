@@ -62,14 +62,6 @@ runs:
         db-name: ${{ inputs.db-name }}
         sa-password: ${{ inputs.sa-password }}
 
-    - name: 'Cleanup folder'
-      shell: bash
-      run: |
-        ls -la ./
-        rm -rf ./* || true
-        rm -rf ./.??* || true
-        ls -la ./
-
     # - name: Notify Discord
     #   uses: Ilshidur/action-discord@master
     #   env:
