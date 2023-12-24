@@ -48,14 +48,6 @@ jobs:
         with:
           name: dacpac
           path: ${{ github.workspace }}/database/bin/Debug/
-      
-      # TODO: Convert to posh
-      # - name: 'Cleanup folder'
-      #   run: |
-      #     ls -la ./
-      #     rm -rf ./* || true
-      #     rm -rf ./.??* || true
-      #     ls -la ./
 
   build-app:
     name: Build App
@@ -98,7 +90,7 @@ jobs:
 
   deploy-dev:
     name: Deploy Dev
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, dev ]
     environment: DEV
     if: contains(github.ref_name, 'dev')
     needs: [ build-app, build-db ]
