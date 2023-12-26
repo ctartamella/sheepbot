@@ -11,7 +11,7 @@ services:
     depends_on:
       - sqlserver
     environment:
-      VERSION: ${VERSION}
+      Version: ${VERSION}
       Environment: ${ENVIRONMENT}
       ConnectionStrings__Default: ${CONNECTION}
       iRacing__Email: ${IRACINGEMAIL}
