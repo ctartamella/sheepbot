@@ -5,6 +5,8 @@ namespace SheepBot.Models;
 
 public class Config
 {
+    public string Version { get; init; } = default!;
+    public string Environment { get; init; } = default!;
     public DiscordSettings Discord { get; init; } = new();
     public iRacingSettings iRacing { get; init; } = new();
 

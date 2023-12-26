@@ -24,14 +24,6 @@ runs:
         path: ${{ inputs.path }}
         name: dacpac
 
-    - name: Create DB
-      shell: bash
-      run: |
-        echo 'IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${{ inputs.db-name }}')
-              BEGIN
-                  CREATE DATABASE ${{ inputs.db-name }}
-              END' | sqlcmd -C -S ${{ inputs.db-host }} -U sa -P ${{ inputs.sa-password }} -d master -i /dev/stdin
-
     - name: Deploy DACPAC
       shell: bash
       run: sqlpackage /Action:Publish /SourceFile:${{ inputs.path }}/database.dacpac /TargetServerName:${{ inputs.db-host }} /TargetUser:sa /TargetPassword:${{ inputs.sa-password }} /TargetDatabaseName:${{ inputs.db-name }} /TargetTrustServerCertificate:True /p:DropObjectsNotInSource=true

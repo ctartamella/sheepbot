@@ -17,7 +17,7 @@ var configurationBuilder = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", false, true)
     .AddEnvironmentVariables();
 
-if (!string.IsNullOrWhiteSpace(environment))
+if (string.IsNullOrWhiteSpace(environment) || environment.ToLower().Equals("local"))
 {
     configurationBuilder.AddUserSecrets<Program>();
 }
@@ -34,12 +34,13 @@ var host = Host.CreateDefaultBuilder(args)
         var connectionString = configurationRoot.GetConnectionString("Default") ?? throw new InvalidDataException();
 
         services
+            .AddSingleton<Func<(string, string)>>(() => (config.Version, config.Environment ))
             .AddSingleton(config.Discord)
             .AddSingleton(config.iRacing)
             .AddSingleton(new InteractionServiceConfig
             {
                 DefaultRunMode = RunMode.Async,
-                InteractionCustomIdDelimiters = new[] { ';' }
+                InteractionCustomIdDelimiters = [';']
             })
             .AddIRacingClient(config.iRacing)
             .AddApplication(connectionString)
