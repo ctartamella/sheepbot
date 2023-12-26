@@ -1,4 +1,4 @@
-name: Deploy Docker app
+name: Deploy Application
 description: Deploy the application's Docker Compose file
 
 inputs:

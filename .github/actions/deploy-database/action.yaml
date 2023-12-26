@@ -3,12 +3,16 @@ description: Deploy the project DACPAC to the specified connection string
 
 inputs:
   sa-password:
+    description: System administrator password for the database
     required: true
   db-name:
+    description: Name of the database to deploy to
     required: true
   db-host:
+    description: Database server host name
     required: true
   path:
+    description: Path for deployment resources
     required: true
     
 runs:

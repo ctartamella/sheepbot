@@ -104,19 +104,19 @@ jobs:
       - name: Deploy Dev
         uses: ./.github/actions/deploy
         with:
+          image-name: ctartamella/sheepbot
           connection-string: "Server=sqlserver;Database=sheepbot;User Id=sa;Password=${{ secrets.SAPASSWORD }};TrustServerCertificate=true"
-          iracing-email: ${{ vars.IRACINGEMAIL }}
-          iracing-password: ${{ secrets.IRACINGPASSWORD }}
           db-host: sqlserver
           db-name: sheepbot
+          iracing-email: ${{ vars.IRACINGEMAIL }}
+          iracing-password: ${{ secrets.IRACINGPASSWORD }}
           sa-password: ${{ secrets.SAPASSWORD }}
           docker-user: ${{ secrets.DOCKER_USER }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
           discord-webhook-id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           discord-webhook-token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           discord-token: ${{ secrets.DISCORDTOKEN }}
-          image-name: ctartamella/sheepbot
-
+          
   deploy-prod:
     name: Deploy Prod
     runs-on: [self-hosted, dev]

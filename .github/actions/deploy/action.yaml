@@ -1,25 +1,34 @@
-name: Deploy Docker app
-description: Deploy the application's Docker Compose file
+name: Deploy Application
+description: Deploy the application's code and infrastructure
+
 inputs:
   environment:
     description: Environment name
     required: true
     default: DEV
   connection-string:
+    description: Database connection string
     required: true
   image-name:
+    description: Docker image name
     required: true
   discord-token:
+    description: The bot token to be used for Discord
     required: true
   iracing-email:
+    description: iRacing account email for API usage
     required: true
   iracing-password:
+    descriptio: iRacing account password for API usage
     required: true
   db-host:
+    description: The database server host name
     required: true
   db-name:
+    description: The name of the database to deploy to
     required: true
   sa-password:
+    description: The system administrator password for SQL server
     required: true
   docker-user:
     description: The username to use for Docker Hub
@@ -28,11 +37,12 @@ inputs:
     description: The password used for Docker Hub
     required: true
   discord-webhook-id:
-    description: The webhook used for Discord notifications
+    description: The webhook ID used for Discord notifications
     required: true
   discord-webhook-token:
-    description: The webhook used for Discord notifications
+    description: The webhook password used for Discord notifications
     required: true
+    
 runs:
   using: composite
   steps:
@@ -40,7 +50,7 @@ runs:
       uses: ./.github/actions/retrieve-version
       id: version
 
-    - name: Deploy Docker
+    - name: Deploy Application
       uses: ./.github/actions/deploy-app
       with:
         path: ./deployment/sheepbot-dev

@@ -3,6 +3,7 @@ description: 'Fetch the version from artifacts and store it in the environment'
 
 outputs:
   version:
+    description: The computed version in semantic format
     value: ${{ steps.read.outputs.version }}
     
 runs:
